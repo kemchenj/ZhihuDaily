@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11173.2" systemVersion="15G31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="Yo5-lv-KuT">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11143.2"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--首页-->
+        <scene sceneID="ekC-xw-39d">
+            <objects>
+                <tableViewController id="nit-XF-QkW" customClass="MainViewController" customModule="ZhihuDaily" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" id="XPZ-vE-XgF">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Story" rowHeight="100" id="oxQ-0v-5xe" customClass="StoryCell" customModule="ZhihuDaily" customModuleProvider="target">
+                                <frame key="frameInset" minY="120" width="375" height="100"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="oxQ-0v-5xe" id="fiK-UU-9wj">
+                                    <frame key="frameInset" width="375" height="99"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <stackView opaque="NO" contentMode="scaleToFill" alignment="top" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="FR7-yH-XQa">
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="255" verticalHuggingPriority="251" horizontalCompressionResistancePriority="756" text="&lt;#Title#&gt;" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dtu-87-KQX">
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" translatesAutoresizingMaskIntoConstraints="NO" id="bsF-q7-gXG">
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="90" id="80k-a1-kRv"/>
+                                                        <constraint firstAttribute="height" constant="70" id="jy7-Au-rFi"/>
+                                                    </constraints>
+                                                </imageView>
+                                            </subviews>
+                                        </stackView>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="FR7-yH-XQa" firstAttribute="top" secondItem="fiK-UU-9wj" secondAttribute="top" constant="15" id="KtA-lp-QCT"/>
+                                        <constraint firstAttribute="trailing" secondItem="FR7-yH-XQa" secondAttribute="trailing" constant="15" id="R71-MZ-AH2"/>
+                                        <constraint firstAttribute="bottom" secondItem="FR7-yH-XQa" secondAttribute="bottom" constant="15" id="T8s-L2-ng1"/>
+                                        <constraint firstItem="FR7-yH-XQa" firstAttribute="leading" secondItem="fiK-UU-9wj" secondAttribute="leading" constant="15" id="ey8-AW-JpU"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="thumbNail" destination="bsF-q7-gXG" id="xoO-Gn-VvJ"/>
+                                    <outlet property="titleLabel" destination="dtu-87-KQX" id="f5O-EG-TMq"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="nit-XF-QkW" id="1cb-vu-dSV"/>
+                            <outlet property="delegate" destination="nit-XF-QkW" id="idH-hg-zTb"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="首页" id="ebw-2X-i3f"/>
+                    <connections>
+                        <segue destination="YY1-O2-4r2" kind="show" identifier="Detail" id="Esv-dS-Hkh"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="IVb-Q8-7Oq" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="504.80000000000001" y="102.99850074962519"/>
+        </scene>
+        <!--DetailViewController-->
+        <scene sceneID="7gV-oN-7YA">
+            <objects>
+                <viewControllerPlaceholder storyboardName="DetailViewController" id="YY1-O2-4r2" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="9LQ-Go-VrQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1235" y="103"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="vcX-Du-Kh1">
+            <objects>
+                <navigationController id="Yo5-lv-KuT" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="vci-1m-9SV">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="nit-XF-QkW" kind="relationship" relationship="rootViewController" id="GnU-ux-tMc"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="26d-6y-7pR" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-447" y="103"/>
+        </scene>
+    </scenes>
+</document>
