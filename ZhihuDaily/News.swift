@@ -26,6 +26,10 @@ struct News {
     init(dateString: String) {
         self.dateString = dateString
     }
+    
+    static func decode(_ json: AnyObject) throws -> News {
+        return try News(dateString: <#T##String#>)
+    }
 }
 
 extension News {

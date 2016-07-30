@@ -27,6 +27,20 @@ struct Story: ModelBannerCanPresent {
         self.title = title
         self.thumbNailURL = thumbNailURL
     }
+    
+    static func decode(json: AnyObject) -> Story? {
+        guard let id = json["id"] as? Int,
+              let title = json["title"] as? String,
+              let thumbNailURL = (json["images"] as? [String])?.first else {
+                return nil
+        }
+        
+        return Story(
+            id: id,
+            title: title,
+            thumbNailURL: thumbNailURL
+        )
+    }
 }
 
 extension Story {

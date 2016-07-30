@@ -21,7 +21,7 @@ class DetailViewController: UIViewController {
     let imageView: UIImageView = {
         let imageView = UIImageView(
             frame: CGRect(x: 0,
-                          y: -66,
+                          y: 0,
                           width: UIScreen.main().bounds.width,
                           height: 200))
         imageView.contentMode = .scaleAspectFill
@@ -56,6 +56,7 @@ class DetailViewController: UIViewController {
             fatalError("Web View Wrong")
         }
         
+        
         return scrollView
     }
     
@@ -83,6 +84,8 @@ extension DetailViewController {
         webScrollView.clipsToBounds = false
         webScrollView.addSubview(imageView)
         webScrollView.delegate = self
+        webScrollView.contentInset.top = -64
+        webScrollView.contentInset.bottom = abs(webScrollView.contentInset.top)
         
         configureNavigationBar()
     }

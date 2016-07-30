@@ -42,6 +42,25 @@ class BannerView: UIView {
         
         clipsToBounds = false
         configureScrollView(in: frame)
+        
+        let bottom = NSLayoutConstraint(item: pageControll,
+                           attribute: .bottom,
+                           relatedBy: .equal,
+                           toItem: self,
+                           attribute: .bottom,
+                           multiplier: 1,
+                           constant: 0)
+        let center = NSLayoutConstraint(item: pageControll,
+                                        attribute: .centerX,
+                                        relatedBy: .equal,
+                                        toItem: self,
+                                        attribute: .centerX,
+                                        multiplier: 1,
+                                        constant: 0)
+        
+        addSubview(pageControll)
+        pageControll.addConstraint(bottom)
+        pageControll.addConstraint(center)
     }
     
     func setScrollOffset(offset: CGFloat){

@@ -47,6 +47,8 @@ extension MainViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        view.backgroundColor = UIColor.white()
+        
         configureNavigationBar()
         configureTableView()
         loadLatestNews()
@@ -128,16 +130,9 @@ extension MainViewController: URLSessionTaskDelegate, URLSessionDelegate {
                     let topStoryDicts = jsonObject["top_stories"] as! [[String: AnyObject]]
                     var stories = [ModelBannerCanPresent]()
                     for topStoryDict in topStoryDicts {
-                        let id = topStoryDict["id"] as! Int
-                        let title = topStoryDict["title"] as! String
-                        let image = topStoryDict["image"] as! String
-                        
-                        let story = Story(id: id,
-                                          title: title,
-                                          thumbNailURL: image)
-                        
-                        
-                        stories.append(story)
+                        let story = Story.decode(json: topStoryDict)
+                
+                        stories.append(story!)
                     }
                     
                     self.topStories.append(contentsOf: stories)
