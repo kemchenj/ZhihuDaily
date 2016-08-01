@@ -16,11 +16,11 @@ protocol ModelBannerCanPresent {
     var bannerImage: UIImage? {get}
 }
 
+
 class BannerView: UIView {
-    
     private var scrollView = UIScrollView()
     
-    private var pageNumber: Int = 0
+    var page: Int = 0
     private let pageControll: UIPageControl = {
         let pageControll = UIPageControl()
         pageControll.hidesForSinglePage = true
@@ -30,47 +30,35 @@ class BannerView: UIView {
         return models.count
     }
     
-    private var banners = [(label: UILabel, imageView: UIImageView)]()
-    var models = [ModelBannerCanPresent]() {
+    private var banners = [(label: UILabel, imageView: UIImageView, heightConstraint: NSLayoutConstraint)]()
+    var models: [ModelBannerCanPresent]! {
         didSet {
             updateBanner()
         }
     }
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    override func awakeFromNib() {
+        super.awakeFromNib()
         
+        scrollView.clipsToBounds = false
+        autoresizesSubviews = false
         clipsToBounds = false
         configureScrollView(in: frame)
-        
-        let bottom = NSLayoutConstraint(item: pageControll,
-                           attribute: .bottom,
-                           relatedBy: .equal,
-                           toItem: self,
-                           attribute: .bottom,
-                           multiplier: 1,
-                           constant: 0)
-        let center = NSLayoutConstraint(item: pageControll,
-                                        attribute: .centerX,
-                                        relatedBy: .equal,
-                                        toItem: self,
-                                        attribute: .centerX,
-                                        multiplier: 1,
-                                        constant: 0)
-        
-        addSubview(pageControll)
-        pageControll.addConstraint(bottom)
-        pageControll.addConstraint(center)
     }
     
     func setScrollOffset(offset: CGFloat){
-        
+        for banner in banners {
+            banner.heightConstraint.constant = max(200, 264 - offset)
+        }
     }
     
     private func updateBanner() {
+        let width = UIScreen.main().bounds.width
+        
         scrollView.contentSize = CGSize(
-            width: frame.width * CGFloat(pageAmount),
+            width: width * CGFloat(pageAmount),
             height: 0)
+        scrollView.autoresizesSubviews = false
         
         let amount = abs(pageAmount - banners.count)
         if pageAmount > banners.count {
@@ -79,20 +67,40 @@ class BannerView: UIView {
                 
                 let label = UILabel()
                 label.text = model.bannerTitle
+                scrollView.addSubview(label)
                 
-                let imageView = UIImageView(
-                    frame: CGRect(x: CGFloat(pageAmount - amount + i) * frame.width,
-                                  y: 0,
-                                  width: self.frame.width,
-                                  height: self.frame.height))
-                imageView.isOpaque = true
+                let imageSize = CGSize(width: UIScreen.main().bounds.width,
+                                       height: 500)
+                
+                let layer = CAGradientLayer()
+                layer.frame = CGRect(origin: CGPoint.zero,
+                                     size: imageSize)
+                layer.colors = [UIColor.black().withAlphaComponent(0.5).cgColor,
+                                UIColor.clear().cgColor]
+                layer.startPoint = CGPoint(x: 0.5, y: 0)
+                layer.endPoint = CGPoint(x: 0.51, y: 1)
+                layer.locations = [0, 1]
+                
+                let imageView = UIImageView()
+                imageView.layer.addSublayer(layer)
                 imageView.contentMode = .scaleAspectFill
+                imageView.translatesAutoresizingMaskIntoConstraints = false
+                imageView.clipsToBounds = true
+                scrollView.addSubview(imageView)
+                
+                imageView.leftAnchor.constraint(equalTo: scrollView.leftAnchor, constant: CGFloat(i) * width).isActive = true
+                imageView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+                
+                imageView.widthAnchor.constraint(equalToConstant: width).isActive = true
+                let heightCon = imageView.heightAnchor.constraint(equalToConstant: 200)
+                heightCon.isActive = true
                 
                 print("**** \(imageView.frame)")
                 
-                scrollView.addSubview(imageView)
-                banners.append((label, imageView))
+                banners.append((label, imageView, heightCon))
             }
+            
+            layoutIfNeeded()
         } else if pageAmount < banners.count {
             for _ in 0 ..< amount {
                 banners.last?.label.removeFromSuperview()
@@ -139,16 +147,10 @@ class BannerView: UIView {
                         imageView.image = image
                     }
                 }).resume()
-            } else {
-                fatalError("One of the bannerImageURL or bannerImage must exist")
             }
         }
         
         pageControll.numberOfPages = pageAmount
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
 }
 
@@ -159,15 +161,27 @@ class BannerView: UIView {
 extension BannerView {
     
     private func configureScrollView(in frame: CGRect) {
-        scrollView.frame = frame
+        
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        
         scrollView.showsHorizontalScrollIndicator = false
         scrollView.delegate = self
         scrollView.isOpaque = true
+        scrollView.isPagingEnabled = true
         scrollView.backgroundColor = UIColor.black()
         addSubview(scrollView)
         
-        scrollView.isPagingEnabled = true
+        scrollView.widthAnchor.constraint(equalTo: widthAnchor).isActive = true
+        scrollView.heightAnchor.constraint(equalTo: heightAnchor).isActive = true
+        scrollView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        scrollView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+        
+        pageControll.translatesAutoresizingMaskIntoConstraints = false
         addSubview(pageControll)
+        pageControll.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        pageControll.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        
+        layoutIfNeeded()
     }
 }
 
@@ -178,12 +192,10 @@ extension BannerView {
 extension BannerView: UIScrollViewDelegate {
     
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-        pageNumber = Int(scrollView.contentOffset.y / scrollView.frame.width + 0.5)
+        page = Int(scrollView.contentOffset.x / scrollView.frame.width + 0.5)
     }
     
-    func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
-        if pageAmount == pageNumber {
-            
-        }
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        pageControll.currentPage = Int(scrollView.contentOffset.x / scrollView.frame.width + 0.5)
     }
 }

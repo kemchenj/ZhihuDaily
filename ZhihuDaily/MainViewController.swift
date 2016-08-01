@@ -9,12 +9,8 @@
 import UIKit
 
 class MainViewController: UITableViewController {
-    
-    let imageBanner = BannerView(frame: CGRect(x: 0,
-                                               y: 0,
-                                               width: UIScreen.main().bounds.width,
-                                               height: 240))
-    
+
+    @IBOutlet weak var imageBanner: BannerView!
     var navigationBarBackgroundImage: UIView? {
         return (navigationController?.navigationBar.subviews.first)
     }
@@ -36,6 +32,12 @@ class MainViewController: UITableViewController {
             }
         }
     }
+    
+    var selectedStory: Story!
+    
+    var navigationBarAlpha: CGFloat {
+        return (tableView.contentOffset.y - 64) / 250
+    }
 }
 
 
@@ -48,16 +50,15 @@ extension MainViewController {
         super.viewDidLoad()
         
         view.backgroundColor = UIColor.white()
-        
+        tableView.clipsToBounds = false
+                
         configureNavigationBar()
         configureTableView()
         loadLatestNews()
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        navigationBarBackgroundImage!.alpha = (tableView.contentOffset.y - 240) / 250
+        super.viewWillAppear(animated)        
     }
     
     func configureNavigationBar() {
@@ -70,19 +71,25 @@ extension MainViewController {
     }
     
     func configureTableView() {
-        tableView.tableHeaderView = imageBanner
-        
         tableView.rowHeight = 101
         tableView.estimatedRowHeight = 101
         tableView.contentInset.top = -64
-        
-        //        tableView.frame.origin.y -= 64
-        
+                
         tableView.delegate = self
         tableView.dataSource = self
     }
     
     func configureImageBanner() {
+        imageBanner.models = news[0].topStories!.map({ (story) -> ModelBannerCanPresent in
+            return story as ModelBannerCanPresent
+        })
+        
+        imageBanner.addGestureRecognizer(UITapGestureRecognizer(target: self,
+                                                                action: #selector(tapImageBanner)))
+        imageBanner.heightAnchor.constraint(equalToConstant: 264)
+    }
+    
+    func tapImageBanner(gesture: UITapGestureRecognizer) {
         
     }
 }
@@ -121,42 +128,16 @@ extension MainViewController: URLSessionTaskDelegate, URLSessionDelegate {
                         return
             }
             
-            let date = jsonObject["date"] as! String
-            var news = News(dateString: date)
-            
-            // Handle TopStories
-            if self.news.count == 0 {
-                OperationQueue().addOperation {
-                    let topStoryDicts = jsonObject["top_stories"] as! [[String: AnyObject]]
-                    var stories = [ModelBannerCanPresent]()
-                    for topStoryDict in topStoryDicts {
-                        let story = Story.decode(json: topStoryDict)
-                
-                        stories.append(story!)
-                    }
-                    
-                    self.topStories.append(contentsOf: stories)
-                }
+            do {
+                let news = try News.decode(json: jsonObject)
+                self.news.append(news)
+            } catch {
+                fatalError("News decode failed")
             }
-            
-            // Handle Stories
-            let storyDicts = jsonObject["stories"] as! [[String: AnyObject]]
-            for storyDict in storyDicts {
-                let id = storyDict["id"] as! Int
-                let title = storyDict["title"] as! String
-                let imageURL = (storyDict["images"] as! [String])[0]
-                
-                let story = Story(id: id,
-                                  title: title,
-                                  thumbNailURL: imageURL)
-                news.stories.append(story)
-            }
-            
-            self.news.append(news)
             
             DispatchQueue.main.async {
                 if self.news.count == 1 {
-                    //                    self.configureImageBanner()
+                    self.configureImageBanner()
                 }
             }
         }).resume()
@@ -183,7 +164,6 @@ extension MainViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
         var cell = tableView.dequeueReusableCell(withIdentifier: "Story") as? StoryCell
         
         if cell == nil {
@@ -201,15 +181,15 @@ extension MainViewController {
 extension MainViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        selectedStory = news[indexPath.section].stories[indexPath.row]
+        selectedStory.isRead = true
+        
         performSegue(withIdentifier: "Detail", sender: nil)
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
-        let indexPath = tableView.indexPathForSelectedRow
-        let story = news[indexPath!.section].stories[indexPath!.row]
-        
+    override func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {        
         let toVC = segue.destinationViewController as! DetailViewController
-        toVC.story = story
+        toVC.story = selectedStory
     }
     
     override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -219,7 +199,7 @@ extension MainViewController {
     }
     
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        navigationBarBackgroundImage!.alpha = (scrollView.contentOffset.y - 240) / 250
-        print(tableView.contentSize)
+        navigationBarBackgroundImage!.alpha = navigationBarAlpha
+        imageBanner.setScrollOffset(offset: scrollView.contentOffset.y)
     }
 }

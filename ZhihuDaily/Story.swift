@@ -8,11 +8,17 @@
 
 import UIKit
 
-struct Story: ModelBannerCanPresent {
+enum StoryDecodeError: ErrorProtocol {
+    case dataWrong
+}
+
+class Story: ModelBannerCanPresent {
     
     var id: Int
     var title: String
     var thumbNailURL: String
+    
+    var isRead = false
 
     var storyURL: String {
         return "https://news-at.zhihu.com/api/4/news/\(id)"
@@ -22,17 +28,26 @@ struct Story: ModelBannerCanPresent {
         return URL(string: thumbNailURL)!
     }
 
-    init(id: Int, title: String, thumbNailURL: String) {
+    private init(id: Int, title: String, thumbNailURL: String) {
         self.id = id
         self.title = title
         self.thumbNailURL = thumbNailURL
     }
     
-    static func decode(json: AnyObject) -> Story? {
+    static func decode(json: [String: AnyObject]) throws -> Story {
         guard let id = json["id"] as? Int,
-              let title = json["title"] as? String,
-              let thumbNailURL = (json["images"] as? [String])?.first else {
-                return nil
+              let title = json["title"] as? String else {
+                throw StoryDecodeError.dataWrong
+        }
+        
+        var thumbNailURL: String
+        
+        if let url = (json["images"] as? [String])?.first {
+            thumbNailURL = url
+        } else if let url = json["image"] as? String {
+            thumbNailURL = url
+        } else {
+            throw StoryDecodeError.dataWrong
         }
         
         return Story(

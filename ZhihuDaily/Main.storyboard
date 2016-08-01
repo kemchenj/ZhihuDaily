@@ -14,9 +14,14 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <view key="tableHeaderView" contentMode="scaleToFill" id="Tlz-rN-oLy" customClass="BannerView" customModule="ZhihuDaily" customModuleProvider="target">
+                            <frame key="frameInset" minX="0.0%" minY="64" width="100.00%" maxY="339"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" heightSizable="YES"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        </view>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Story" rowHeight="100" id="oxQ-0v-5xe" customClass="StoryCell" customModule="ZhihuDaily" customModuleProvider="target">
-                                <frame key="frameInset" minY="120" width="375" height="100"/>
+                                <frame key="frameInset" minY="384" width="375" height="100"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="oxQ-0v-5xe" id="fiK-UU-9wj">
                                     <frame key="frameInset" width="375" height="99"/>
@@ -58,6 +63,7 @@
                     </tableView>
                     <navigationItem key="navigationItem" title="首页" id="ebw-2X-i3f"/>
                     <connections>
+                        <outlet property="imageBanner" destination="Tlz-rN-oLy" id="8cc-Fh-2QZ"/>
                         <segue destination="YY1-O2-4r2" kind="show" identifier="Detail" id="Esv-dS-Hkh"/>
                     </connections>
                 </tableViewController>

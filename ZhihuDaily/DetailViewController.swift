@@ -30,23 +30,23 @@ class DetailViewController: UIViewController {
         let imageSize = CGSize(width: UIScreen.main().bounds.width,
                                height: 200)
         
-        UIGraphicsBeginImageContext(imageSize)
-        defer {
-            UIGraphicsEndImageContext()
-        }
+//        UIGraphicsBeginImageContext(imageSize)
+//        defer {
+//            UIGraphicsEndImageContext()
+//        }
         
         let layer = CAGradientLayer()
         layer.frame = CGRect(origin: CGPoint.zero,
                              size: imageSize)
-        layer.colors = [UIColor.black().withAlphaComponent(0.5).cgColor,
+        layer.colors = [UIColor.black().withAlphaComponent(0.8).cgColor,
                         UIColor.clear().cgColor]
         layer.startPoint = CGPoint(x: 0.5, y: 0)
         layer.endPoint = CGPoint(x: 0.51, y: 1)
         layer.locations = [0, 1]
         
-        layer.render(in: UIGraphicsGetCurrentContext()!)
+//        layer.render(in: UIGraphicsGetCurrentContext()!)
         
-        imageView.image = UIGraphicsGetImageFromCurrentImageContext()!
+        imageView.layer.addSublayer(layer)
         
         return imageView
     }()
@@ -81,19 +81,14 @@ extension DetailViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        webScrollView.clipsToBounds = false
-        webScrollView.addSubview(imageView)
-        webScrollView.delegate = self
-        webScrollView.contentInset.top = -64
-        webScrollView.contentInset.bottom = abs(webScrollView.contentInset.top)
+        webView.backgroundColor = UIColor.white()
         
         configureNavigationBar()
+        configureWebView()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        navigationBarBackgroundImage?.alpha = (webScrollView.contentOffset.y - 44) / 200
     }
     
     func configureNavigationBar() {
@@ -102,6 +97,14 @@ extension DetailViewController {
         bar?.setBackgroundImage(UIImage(), for: .default)
         bar?.isTranslucent = false
         navigationBarBackgroundImage!.alpha = 0
+    }
+    
+    func configureWebView() {
+        webScrollView.clipsToBounds = false
+        webScrollView.addSubview(imageView)
+        webScrollView.delegate = self
+        webScrollView.contentInset.top = -64
+        webScrollView.contentInset.bottom = 44
     }
 }
 
@@ -170,7 +173,8 @@ extension DetailViewController {
             DispatchQueue.main.async {
                 self.imageView.image = image
                 UIView.animate(withDuration: 0.33, animations: {
-                    self.navigationBarBackgroundImage?.alpha = (self.webScrollView.contentOffset.y - 44) / 200
+                    self.imageView.alpha = 1
+//                    self.navigationBarBackgroundImage?.alpha = (self.webScrollView.contentOffset.y - 64) / 200
                 })
             }
         }).resume()
@@ -184,6 +188,6 @@ extension DetailViewController {
 extension DetailViewController: UIScrollViewDelegate {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        navigationBarBackgroundImage?.alpha = (scrollView.contentOffset.y - 44) / 200
+        navigationBarBackgroundImage?.alpha = (scrollView.contentOffset.y - 64) / 200
     }
 }

@@ -15,6 +15,8 @@ class StoryCell: UITableViewCell {
 
     override func awakeFromNib() {
         super.awakeFromNib()
+        
+        self.selectionStyle = .gray
     }
 
     func configure(for story: Story) {
