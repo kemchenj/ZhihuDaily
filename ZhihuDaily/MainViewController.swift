@@ -49,7 +49,7 @@ extension MainViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = UIColor.white()
+        view.backgroundColor = UIColor.white
         tableView.clipsToBounds = false
                 
         configureNavigationBar()
@@ -58,12 +58,14 @@ extension MainViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)        
+        super.viewWillAppear(animated)
+        
+        navigationBarBackgroundImage!.alpha = navigationBarAlpha
     }
     
     func configureNavigationBar() {
         let bar = navigationController?.navigationBar
-        bar?.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white()]
+        bar?.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
         bar?.shadowImage = UIImage()
         bar?.setBackgroundImage(UIImage(), for: .default)
         bar?.isTranslucent = false
@@ -188,7 +190,7 @@ extension MainViewController {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {        
-        let toVC = segue.destinationViewController as! DetailViewController
+        let toVC = segue.destination as! DetailViewController
         toVC.story = selectedStory
     }
     

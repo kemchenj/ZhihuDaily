@@ -8,7 +8,7 @@
 
 import UIKit
 
-enum StoryDecodeError: ErrorProtocol {
+enum StoryDecodeError: Error {
     case dataWrong
 }
 

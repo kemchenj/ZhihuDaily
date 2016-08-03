@@ -8,6 +8,7 @@
 
 import UIKit
 
+@IBDesignable
 class StoryCell: UITableViewCell {
     
     @IBOutlet weak var thumbNail: UIImageView!

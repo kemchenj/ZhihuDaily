@@ -22,30 +22,23 @@ class DetailViewController: UIViewController {
         let imageView = UIImageView(
             frame: CGRect(x: 0,
                           y: 0,
-                          width: UIScreen.main().bounds.width,
+                          width: UIScreen.main.bounds.width,
                           height: 200))
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         
-        let imageSize = CGSize(width: UIScreen.main().bounds.width,
+        let imageSize = CGSize(width: UIScreen.main.bounds.width,
                                height: 200)
-        
-//        UIGraphicsBeginImageContext(imageSize)
-//        defer {
-//            UIGraphicsEndImageContext()
-//        }
         
         let layer = CAGradientLayer()
         layer.frame = CGRect(origin: CGPoint.zero,
                              size: imageSize)
-        layer.colors = [UIColor.black().withAlphaComponent(0.8).cgColor,
-                        UIColor.clear().cgColor]
+        layer.colors = [UIColor.black.withAlphaComponent(0.8).cgColor,
+                        UIColor.clear.cgColor]
         layer.startPoint = CGPoint(x: 0.5, y: 0)
         layer.endPoint = CGPoint(x: 0.51, y: 1)
         layer.locations = [0, 1]
-        
-//        layer.render(in: UIGraphicsGetCurrentContext()!)
-        
+                
         imageView.layer.addSublayer(layer)
         
         return imageView
@@ -55,7 +48,6 @@ class DetailViewController: UIViewController {
         guard let scrollView = webView.subviews[0] as? UIScrollView else {
             fatalError("Web View Wrong")
         }
-        
         
         return scrollView
     }
@@ -67,9 +59,6 @@ class DetailViewController: UIViewController {
         }
     }
     
-    override func preferredStatusBarStyle() -> UIStatusBarStyle {
-        return .lightContent
-    }
 }
 
 
@@ -81,7 +70,7 @@ extension DetailViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        webView.backgroundColor = UIColor.white()
+        webView.backgroundColor = UIColor.white
         
         configureNavigationBar()
         configureWebView()
@@ -89,6 +78,8 @@ extension DetailViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        navigationBarBackgroundImage?.alpha = (webScrollView.contentOffset.y - 64) / 200
     }
     
     func configureNavigationBar() {
@@ -172,9 +163,8 @@ extension DetailViewController {
             
             DispatchQueue.main.async {
                 self.imageView.image = image
-                UIView.animate(withDuration: 0.33, animations: {
+                UIView.animate(withDuration: 1, animations: {
                     self.imageView.alpha = 1
-//                    self.navigationBarBackgroundImage?.alpha = (self.webScrollView.contentOffset.y - 64) / 200
                 })
             }
         }).resume()

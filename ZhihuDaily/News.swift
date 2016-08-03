@@ -69,6 +69,6 @@ extension News {
     }
 }
 
-enum NewsDecodeError: ErrorProtocol {
+enum NewsDecodeError: Error {
     case wrongData
 }

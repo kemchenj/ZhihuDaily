@@ -53,7 +53,7 @@ class BannerView: UIView {
     }
     
     private func updateBanner() {
-        let width = UIScreen.main().bounds.width
+        let width = UIScreen.main.bounds.width
         
         scrollView.contentSize = CGSize(
             width: width * CGFloat(pageAmount),
@@ -69,14 +69,14 @@ class BannerView: UIView {
                 label.text = model.bannerTitle
                 scrollView.addSubview(label)
                 
-                let imageSize = CGSize(width: UIScreen.main().bounds.width,
+                let imageSize = CGSize(width: UIScreen.main.bounds.width,
                                        height: 500)
                 
                 let layer = CAGradientLayer()
                 layer.frame = CGRect(origin: CGPoint.zero,
                                      size: imageSize)
-                layer.colors = [UIColor.black().withAlphaComponent(0.5).cgColor,
-                                UIColor.clear().cgColor]
+                layer.colors = [UIColor.black.withAlphaComponent(0.5).cgColor,
+                                UIColor.clear.cgColor]
                 layer.startPoint = CGPoint(x: 0.5, y: 0)
                 layer.endPoint = CGPoint(x: 0.51, y: 1)
                 layer.locations = [0, 1]
@@ -168,7 +168,7 @@ extension BannerView {
         scrollView.delegate = self
         scrollView.isOpaque = true
         scrollView.isPagingEnabled = true
-        scrollView.backgroundColor = UIColor.black()
+        scrollView.backgroundColor = UIColor.black
         addSubview(scrollView)
         
         scrollView.widthAnchor.constraint(equalTo: widthAnchor).isActive = true
