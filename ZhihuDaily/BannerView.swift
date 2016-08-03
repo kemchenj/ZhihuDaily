@@ -69,20 +69,7 @@ class BannerView: UIView {
                 label.text = model.bannerTitle
                 scrollView.addSubview(label)
                 
-                let imageSize = CGSize(width: UIScreen.main.bounds.width,
-                                       height: 500)
-                
-                let layer = CAGradientLayer()
-                layer.frame = CGRect(origin: CGPoint.zero,
-                                     size: imageSize)
-                layer.colors = [UIColor.black.withAlphaComponent(0.5).cgColor,
-                                UIColor.clear.cgColor]
-                layer.startPoint = CGPoint(x: 0.5, y: 0)
-                layer.endPoint = CGPoint(x: 0.51, y: 1)
-                layer.locations = [0, 1]
-                
                 let imageView = UIImageView()
-                imageView.layer.addSublayer(layer)
                 imageView.contentMode = .scaleAspectFill
                 imageView.translatesAutoresizingMaskIntoConstraints = false
                 imageView.clipsToBounds = true
@@ -162,6 +149,23 @@ extension BannerView {
     
     private func configureScrollView(in frame: CGRect) {
         
+        // 渐变
+        let imageSize = CGSize(width: UIScreen.main.bounds.width,
+                               height: 500)
+
+        let layer = CAGradientLayer()
+        layer.frame = CGRect(origin: CGPoint.zero,
+                             size: imageSize)
+        layer.colors = [UIColor.black.withAlphaComponent(0.5).cgColor,
+                        UIColor.clear.cgColor]
+        layer.startPoint = CGPoint(x: 0.5, y: 0)
+        layer.endPoint = CGPoint(x: 0.51, y: 1)
+        layer.locations = [0, 1]
+        
+        scrollView.layer.addSublayer(layer)
+        
+        
+        // 处理约束
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         
         scrollView.showsHorizontalScrollIndicator = false
@@ -169,6 +173,7 @@ extension BannerView {
         scrollView.isOpaque = true
         scrollView.isPagingEnabled = true
         scrollView.backgroundColor = UIColor.black
+        scrollView.clipsToBounds = false
         addSubview(scrollView)
         
         scrollView.widthAnchor.constraint(equalTo: widthAnchor).isActive = true

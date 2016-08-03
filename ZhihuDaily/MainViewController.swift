@@ -89,6 +89,11 @@ extension MainViewController {
         imageBanner.addGestureRecognizer(UITapGestureRecognizer(target: self,
                                                                 action: #selector(tapImageBanner)))
         imageBanner.heightAnchor.constraint(equalToConstant: 264)
+        imageBanner.topAnchor.constraint(equalTo: tableView.topAnchor)
+        imageBanner.leftAnchor.constraint(equalTo: tableView.leftAnchor)
+        imageBanner.rightAnchor.constraint(equalTo: tableView.rightAnchor)
+        
+        tableView.layoutIfNeeded()
     }
     
     func tapImageBanner(gesture: UITapGestureRecognizer) {
