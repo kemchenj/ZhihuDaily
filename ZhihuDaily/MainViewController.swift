@@ -15,26 +15,23 @@ class MainViewController: UITableViewController {
         return (navigationController?.navigationBar.subviews.first)
     }
     
-    var topStories = [ModelBannerCanPresent]() {
-        didSet {
-            imageBanner.models = self.topStories as [ModelBannerCanPresent]
+    var topStories: [ModelBannerCanPresent] {
+        set {
+            imageBanner.models = topStories
+        }
+        get {
+            return imageBanner.models
         }
     }
     
     var news = [News]() {
         didSet {
-            print("**** \(Thread.current)")
-            print(news)
             OperationQueue.main.addOperation {
-                print("****** \(Thread.current)")
-                
                 self.tableView.insertSections(IndexSet(integer: self.news.count-1), with: .top)
             }
         }
     }
-    
-    var selectedStory: Story!
-    
+        
     var navigationBarAlpha: CGFloat {
         return (tableView.contentOffset.y - 64) / 250
     }
@@ -54,6 +51,7 @@ extension MainViewController {
                 
         configureNavigationBar()
         configureTableView()
+        
         loadLatestNews()
     }
     
@@ -82,18 +80,13 @@ extension MainViewController {
     }
     
     func configureImageBanner() {
+        
         imageBanner.models = news[0].topStories!.map({ (story) -> ModelBannerCanPresent in
             return story as ModelBannerCanPresent
         })
         
         imageBanner.addGestureRecognizer(UITapGestureRecognizer(target: self,
                                                                 action: #selector(tapImageBanner)))
-        imageBanner.heightAnchor.constraint(equalToConstant: 264)
-        imageBanner.topAnchor.constraint(equalTo: tableView.topAnchor)
-        imageBanner.leftAnchor.constraint(equalTo: tableView.leftAnchor)
-        imageBanner.rightAnchor.constraint(equalTo: tableView.rightAnchor)
-        
-        tableView.layoutIfNeeded()
     }
     
     func tapImageBanner(gesture: UITapGestureRecognizer) {
@@ -188,17 +181,9 @@ extension MainViewController {
 extension MainViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        selectedStory = news[indexPath.section].stories[indexPath.row]
-        selectedStory.isRead = true
-        
         performSegue(withIdentifier: "Detail", sender: nil)
     }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {        
-        let toVC = segue.destination as! DetailViewController
-        toVC.story = selectedStory
-    }
-    
+
     override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.section == news.count-1 && indexPath.row == 0 {
             loadPreviousNews()
@@ -207,6 +192,5 @@ extension MainViewController {
     
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
         navigationBarBackgroundImage!.alpha = navigationBarAlpha
-        imageBanner.setScrollOffset(offset: scrollView.contentOffset.y)
     }
 }

@@ -18,6 +18,7 @@
 		C83099CA1D44A7D800D406F6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C83099C91D44A7D800D406F6 /* Main.storyboard */; };
 		C843F41B1D51D41F00E8AC1C /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C843F41A1D51D41F00E8AC1C /* Launch Screen.storyboard */; };
 		C872BF4E1D45F1170020CEC5 /* BannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C872BF4D1D45F1170020CEC5 /* BannerView.swift */; };
+		C88EA6501D5830BD00BBCFE4 /* NetworkClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = C88EA64F1D5830BD00BBCFE4 /* NetworkClient.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +36,7 @@
 		C843F41A1D51D41F00E8AC1C /* Launch Screen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		C872BF4D1D45F1170020CEC5 /* BannerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BannerView.swift; sourceTree = "<group>"; };
 		C872BF501D45FD460020CEC5 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
+		C88EA64F1D5830BD00BBCFE4 /* NetworkClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkClient.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,7 +74,7 @@
 				C83099CC1D44A7E800D406F6 /* Controller */,
 				C83099CD1D44A7F300D406F6 /* Model */,
 				C83099CE1D44A7FA00D406F6 /* View */,
-				C872BF541D46041F0020CEC5 /* Banner */,
+				C88EA64E1D58309F00BBCFE4 /* Tool */,
 				C83099B91D44A74100D406F6 /* Ohters */,
 			);
 			path = ZhihuDaily;
@@ -120,6 +122,7 @@
 			isa = PBXGroup;
 			children = (
 				C83099C21D44A7A200D406F6 /* StoryCell.swift */,
+				C872BF4D1D45F1170020CEC5 /* BannerView.swift */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -132,12 +135,12 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		C872BF541D46041F0020CEC5 /* Banner */ = {
+		C88EA64E1D58309F00BBCFE4 /* Tool */ = {
 			isa = PBXGroup;
 			children = (
-				C872BF4D1D45F1170020CEC5 /* BannerView.swift */,
+				C88EA64F1D5830BD00BBCFE4 /* NetworkClient.swift */,
 			);
-			name = Banner;
+			name = Tool;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -222,6 +225,7 @@
 				C83099C41D44A7A200D406F6 /* DetailViewController.swift in Sources */,
 				C83099C71D44A7A200D406F6 /* Story.swift in Sources */,
 				C83099C81D44A7A200D406F6 /* StoryCell.swift in Sources */,
+				C88EA6501D5830BD00BBCFE4 /* NetworkClient.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

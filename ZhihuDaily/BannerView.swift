@@ -10,27 +10,58 @@ import UIKit
 
 // 给Model用的协议，符合这一个协议的Model都可以被BannerView展示
 protocol ModelBannerCanPresent {
-    var bannerTitle: String {get}
+    var bannerTitle: String { get }
     
-    var bannerImageURL: URL? {get}
-    var bannerImage: UIImage? {get}
+    var bannerImageURL: URL? { get }
+    var bannerImage: UIImage? { get }
 }
 
 
+
 class BannerView: UIView {
-    private var scrollView = UIScrollView()
-    
-    var page: Int = 0
-    private let pageControll: UIPageControl = {
-        let pageControll = UIPageControl()
-        pageControll.hidesForSinglePage = true
-        return pageControll
+    private var scrollView: UIScrollView = {
+        
+        // 加一层渐变的layer
+        let layer: CAGradientLayer = {
+            let imageSize = CGSize(
+                width: UIScreen.main.bounds.width,
+                height: 500)
+            
+            let layer = CAGradientLayer()
+            layer.frame = CGRect(origin: CGPoint.zero,
+                                 size: imageSize)
+            layer.colors = [
+                UIColor.black.withAlphaComponent(0.5).cgColor,
+                UIColor.clear.cgColor
+            ]
+            
+            layer.startPoint = CGPoint(x: 0.5, y: 0)
+            layer.endPoint = CGPoint(x: 0.51, y: 1)
+            layer.locations = [0, 1]
+            
+            return layer
+        }()
+        
+        // 配置ScrollView
+        let scrollView = UIScrollView()
+        
+        scrollView.layer.addSublayer(layer)
+        scrollView.clipsToBounds = true
+        scrollView.showsHorizontalScrollIndicator = false
+        scrollView.isOpaque = true
+        scrollView.isPagingEnabled = true
+        scrollView.backgroundColor = UIColor.black
+        
+        return scrollView
     }()
+    
+    private var stackView: UIStackView!
+    
     private var pageAmount: Int {
         return models.count
     }
     
-    private var banners = [(label: UILabel, imageView: UIImageView, heightConstraint: NSLayoutConstraint)]()
+    private var banners = [(label: UILabel, imageView: UIImageView)]()
     var models: [ModelBannerCanPresent]! {
         didSet {
             updateBanner()
@@ -40,60 +71,49 @@ class BannerView: UIView {
     override func awakeFromNib() {
         super.awakeFromNib()
         
-        scrollView.clipsToBounds = false
-        autoresizesSubviews = false
-        clipsToBounds = false
-        configureScrollView(in: frame)
+        configureScrollView()
+        configureStackView()
     }
-    
-    func setScrollOffset(offset: CGFloat){
-        for banner in banners {
-            banner.heightConstraint.constant = max(200, 264 - offset)
-        }
-    }
+}
+
+
+
+// Mark: - Update UI
+
+extension BannerView {
     
     private func updateBanner() {
         let width = UIScreen.main.bounds.width
         
-        scrollView.contentSize = CGSize(
-            width: width * CGFloat(pageAmount),
-            height: 0)
-        scrollView.autoresizesSubviews = false
+        stackView.frame.size.width *= CGFloat(pageAmount)
         
         let amount = abs(pageAmount - banners.count)
         if pageAmount > banners.count {
-            for i in 0 ..< amount {
+            for _ in 0 ..< amount {
+                // 取出模型
                 let model = models[banners.count]
                 
-                let label = UILabel()
-                label.text = model.bannerTitle
-                scrollView.addSubview(label)
-                
+                // 初始化imageView
                 let imageView = UIImageView()
                 imageView.contentMode = .scaleAspectFill
-                imageView.translatesAutoresizingMaskIntoConstraints = false
-                imageView.clipsToBounds = true
-                scrollView.addSubview(imageView)
+                stackView.addArrangedSubview(imageView)
                 
-                imageView.leftAnchor.constraint(equalTo: scrollView.leftAnchor, constant: CGFloat(i) * width).isActive = true
-                imageView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+                // 初始化label
+                let label = UILabel()
+                label.text = model.bannerTitle
                 
-                imageView.widthAnchor.constraint(equalToConstant: width).isActive = true
-                let heightCon = imageView.heightAnchor.constraint(equalToConstant: 200)
-                heightCon.isActive = true
+                label.frame = imageView.frame
+                label.frame.origin.y += 30
                 
-                print("**** \(imageView.frame)")
+                scrollView.addSubview(label)
                 
-                banners.append((label, imageView, heightCon))
-            }
-            
-            layoutIfNeeded()
-        } else if pageAmount < banners.count {
-            for _ in 0 ..< amount {
-                banners.last?.label.removeFromSuperview()
-                banners.last?.imageView.removeFromSuperview()
+                banners.append((label, imageView))
             }
         }
+        
+        scrollView.contentSize = CGSize(
+            width: width * CGFloat(pageAmount),
+            height: 0)
         
         updateUI()
     }
@@ -130,14 +150,11 @@ class BannerView: UIView {
                     }
                     
                     OperationQueue.main.addOperation {
-                        print("***** \(Thread.current)")
                         imageView.image = image
                     }
                 }).resume()
             }
         }
-        
-        pageControll.numberOfPages = pageAmount
     }
 }
 
@@ -147,60 +164,19 @@ class BannerView: UIView {
 
 extension BannerView {
     
-    private func configureScrollView(in frame: CGRect) {
+    private func configureScrollView() {
+        scrollView.frame = frame
         
-        // 渐变
-        let imageSize = CGSize(width: UIScreen.main.bounds.width,
-                               height: 500)
-
-        let layer = CAGradientLayer()
-        layer.frame = CGRect(origin: CGPoint.zero,
-                             size: imageSize)
-        layer.colors = [UIColor.black.withAlphaComponent(0.5).cgColor,
-                        UIColor.clear.cgColor]
-        layer.startPoint = CGPoint(x: 0.5, y: 0)
-        layer.endPoint = CGPoint(x: 0.51, y: 1)
-        layer.locations = [0, 1]
-        
-        scrollView.layer.addSublayer(layer)
-        
-        
-        // 处理约束
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
-        
-        scrollView.showsHorizontalScrollIndicator = false
-        scrollView.delegate = self
-        scrollView.isOpaque = true
-        scrollView.isPagingEnabled = true
-        scrollView.backgroundColor = UIColor.black
-        scrollView.clipsToBounds = false
         addSubview(scrollView)
+    }
+    
+    private func configureStackView() {
+        stackView = UIStackView(frame: frame)
         
-        scrollView.widthAnchor.constraint(equalTo: widthAnchor).isActive = true
-        scrollView.heightAnchor.constraint(equalTo: heightAnchor).isActive = true
-        scrollView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-        scrollView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+        stackView.alignment = .fill
+        stackView.distribution = .fillEqually
         
-        pageControll.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(pageControll)
-        pageControll.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-        pageControll.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-        
-        layoutIfNeeded()
+        scrollView.addSubview(stackView)
     }
 }
 
-
-
-// Mark: - ScrollView Delegate
-
-extension BannerView: UIScrollViewDelegate {
-    
-    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-        page = Int(scrollView.contentOffset.x / scrollView.frame.width + 0.5)
-    }
-    
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        pageControll.currentPage = Int(scrollView.contentOffset.x / scrollView.frame.width + 0.5)
-    }
-}

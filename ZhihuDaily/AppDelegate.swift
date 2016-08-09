@@ -17,18 +17,15 @@ let themeColor = UIColor(red: 56/255,
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var window: UIWindow?
-    
+
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         
         UINavigationBar.appearance().tintColor = UIColor.white
         
         // 程序启动
-        let mainVC = UIStoryboard.init(name: "Main", bundle: nil).instantiateInitialViewController() as? UINavigationController
+        let mainVC = UIStoryboard.init(name: "Main", bundle: nil).instantiateInitialViewController()
         window?.rootViewController = mainVC
         window?.makeKeyAndVisible()
-        
-        
-        
         
         // 启动页
         if let data = UserDefaults.standard.value(forKey: "LaunchImage") as? Data,
@@ -86,6 +83,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }).resume()
     }
     
+    
+    // 处理Background Download Task
+    var backgroundSessionCompletionHandler: (() -> Void)?
+    func application(_ application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: () -> Void) {
+        backgroundSessionCompletionHandler = completionHandler
+    }
 }
 
 extension AppDelegate {

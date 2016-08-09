@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import UIKit
 
 
 
@@ -26,17 +25,32 @@ struct News {
         return year + "年" + month + "月" + day + "日"
     }
     
-    private init(dateString: String, stories: [Story], topStories: [Story]?) {
+    init(dateString: String, stories: [Story], topStories: [Story]?) {
         self.dateString = dateString
         self.stories = stories
         self.topStories = topStories
     }
+
+}
+
+extension News {
     
-    static func decode(json: [String: AnyObject]) throws -> News {
+    static var latestNewsURL: URL {
+        return URL(string: "https://news-at.zhihu.com/api/4/news/latest")!
+    }
+    
+    var previousNewsURL: URL {
+        return URL(string: "https://news-at.zhihu.com/api/4/news/before/\(dateString)")!
+    }
+}
+
+// JSON转模型
+extension News: DecodeableModel {
+    
+    static func decode(json: AnyObject) throws -> News {
         guard let dateString = json["date"] as? String,
-            let storyDicts = json["stories"] as? [[String: AnyObject]]
-            else {
-                throw NewsDecodeError.wrongData
+              let storyDicts = json["stories"] as? [[String: AnyObject]] else {
+                throw NetworkClientError.invalidContent
         }
         
         var topStories: [Story]?
@@ -56,19 +70,4 @@ struct News {
                     stories: stories,
                     topStories: topStories)
     }
-}
-
-extension News {
-    
-    static var latestNewsURL: URL {
-        return URL(string: "https://news-at.zhihu.com/api/4/news/latest")!
-    }
-    
-    var previousNewsURL: URL {
-        return URL(string: "https://news-at.zhihu.com/api/4/news/before/\(dateString)")!
-    }
-}
-
-enum NewsDecodeError: Error {
-    case wrongData
 }
