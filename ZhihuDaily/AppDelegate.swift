@@ -70,7 +70,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
             URLSession.shared.dataTask(with: request, completionHandler: { (data, response, error) in
                 if let error = error {
-                    fatalError("\(error)")
+//                    fatalError("\(error)")
+                    return
                 }
                 
                 guard let data = data else {
