@@ -10,9 +10,8 @@ import UIKit
 
 
 
-public typealias NetworkResult = (Data) -> Void
-public typealias JSONResult = (AnyObject) -> Void
-public typealias ImageResult = (UIImage) -> Void
+public typealias NetworkResult = (AnyObject?, Error?) -> Void
+public typealias ImageResult = (UIImage?, Error?) -> Void
 public typealias ProgressBlock = (Float) -> Void
 
 
@@ -69,49 +68,18 @@ class NetworkClient: NSObject {
 // MARK: service methods
 extension NetworkClient {
     
-    public func getData(from url: URL, completion: NetworkResult) throws {
+    public func getData(from url: URL, completion: NetworkResult) {
         let request = URLRequest(url: url)
         let task = urlSession.dataTask(with: request) { [unowned self] (data, response, error) in
-            if error != nil {
-                throw NetworkClientError.connectFailed
-            }
-            
             guard let data = data else {
-                throw NetworkClientError.invalidData
+                OperationQueue.main.addOperation {
+                    completion(nil, error)
+                }
                 return
             }
-            
-            OperationQueue.main.addOperation {
-                completion()
-            }
+            self.parseJSON(data, completion: completion)
         }
         task.resume()
-    }
-    
-    private func getData(from url: URL, asyncCompletion: NetworkResult) throws {
-        do{
-            try getData(from: url, completion: { (data) in
-                OperationQueue().addOperation {
-                    asyncCompletion(data)
-                }
-            })
-        } catch {
-            throw error
-        }
-    }
-    
-    public func getJSON(from url: URL, completion: JSONResult) throws {
-        do {
-            try getData(from: url, completion: { data in
-                OperationQueue().addOperation {
-                    self.parseJSON(data, completion: { json in
-                        completion(json)
-                    })
-                }
-            })
-        } catch {
-            
-        }
     }
     
     public func getImage(_ url: URL, completion: ImageResult) -> URLSessionDownloadTask {
@@ -119,7 +87,10 @@ extension NetworkClient {
         let task = urlSession.downloadTask(with: request) {
             (fileUrl, response, error) in
             guard let fileUrl = fileUrl else {
-                
+                OperationQueue.main.addOperation {
+                    completion(nil, error)
+                }
+                return
             }
             
             // You must move the file or open it for reading before this closure returns or it will be deleted
@@ -266,4 +237,3 @@ private extension NetworkClient {
     }
     
 }
-
