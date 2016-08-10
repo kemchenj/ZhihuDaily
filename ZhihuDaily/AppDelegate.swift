@@ -17,7 +17,7 @@ let themeColor = UIColor(red: 56/255,
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var window: UIWindow?
-
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         
         UINavigationBar.appearance().tintColor = UIColor.white
@@ -37,7 +37,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             window?.addSubview(splashView)
             window?.bringSubview(toFront: splashView)
             splashView.image = image
-    
+            
             UIView.animate(withDuration: 3, delay: 0,
                            options: [.curveEaseOut], animations: {
                             splashView.transform = CGAffineTransform(scaleX: 1.2, y: 1.2)
@@ -47,41 +47,53 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             })
         }
         downloadNewImage()
-                
+        
         return true
     }
     
     func downloadNewImage() {
-        let request = URLRequest(url: URL(string: "https://news-at.zhihu.com/api/4/start-image/1080*1776")!)
+        let url = URL(string: "https://news-at.zhihu.com/api/4/start-image/1080*1776")!
         
-        URLSession.shared.dataTask(with: request, completionHandler: { (data, response, error) in
-            if let error = error {
-                print("******* \(error)")
-            }
-            
-            guard let data = data,
-                let json = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers),
-                let urlString = json["img"] as? String else {
-                    print("Data Wrong")
+        NetworkClient.shared.getData(from: url, completion: { json in
+            guard let urlString = json["img"] as? String,
+                  let url = URL(string: urlString) else {
                     return
             }
             
-            let request = URLRequest(url: URL(string: urlString)!)
-            
-            URLSession.shared.dataTask(with: request, completionHandler: { (data, response, error) in
-                if let error = error {
-//                    fatalError("\(error)")
-                    return
-                }
+            NetworkClient.shared.getData(from: url, completion: { data in
+                guard let 
                 
-                guard let data = data else {
-                    print("Image Data Error")
-                    return
-                }
-                
-                UserDefaults.standard.set(data, forKey: "LaunchImage")
-            }).resume()
-        }).resume()
+            })
+        })
+        
+        //        URLSession.shared.dataTask(with: request, completionHandler: { (data, response, error) in
+        //            if let error = error {
+        //                print("******* \(error)")
+        //            }
+        //
+        //            guard let data = data,
+        //                let json = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers),
+        //                let urlString = json["img"] as? String else {
+        //                    print("Data Wrong")
+        //                    return
+        //            }
+        //
+        //            let request = URLRequest(url: URL(string: urlString)!)
+        //
+        //            URLSession.shared.dataTask(with: request, completionHandler: { (data, response, error) in
+        //                if let error = error {
+        ////                    fatalError("\(error)")
+        //                    return
+        //                }
+        //
+        //                guard let data = data else {
+        //                    print("Image Data Error")
+        //                    return
+        //                }
+        //
+        //                UserDefaults.standard.set(data, forKey: "LaunchImage")
+        //            }).resume()
+        //        }).resume()
     }
     
     
