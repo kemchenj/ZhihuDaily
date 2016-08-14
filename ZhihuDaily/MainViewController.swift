@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Alamofire
 
 class MainViewController: UITableViewController {
 
@@ -92,6 +93,18 @@ extension MainViewController {
     func tapImageBanner(gesture: UITapGestureRecognizer) {
         
     }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
+        switch segue.identifier! {
+        case "MasterToDetail":
+            guard let destinationVC = segue.destination as? DetailViewController,
+                let cell = tableView.cellForRow(at: tableView.indexPathForSelectedRow!) as? StoryCell else { fatalError() }
+            
+            destinationVC.story = cell.story
+            
+        default: break
+        }
+    }
 }
 
 
@@ -110,37 +123,21 @@ extension MainViewController: URLSessionTaskDelegate, URLSessionDelegate {
     
     private func getNews(from newsURL:URL) {
         // Request
-        let request = URLRequest(
-            url: newsURL,
-            cachePolicy: .reloadRevalidatingCacheData)
-        
-        URLSession.shared.dataTask(with: request, completionHandler: { (data, response, error) in
-            if let error = error {
-                print("*** \(error)")
-                return
-            }
-            
-            guard let data = data,
-                let jsonObject = try? JSONSerialization.jsonObject(
-                    with: data,
-                    options: .mutableContainers) as! [String: AnyObject] else {
-                        print("*** Internet connect failed")
-                        return
-            }
-            
-            do {
-                let news = try News.decode(json: jsonObject)
-                self.news.append(news)
-            } catch {
-                fatalError("News decode failed")
-            }
-            
-            DispatchQueue.main.async {
-                if self.news.count == 1 {
-                    self.configureImageBanner()
+        request(newsURL, withMethod: .get).responseJSON { (response) in
+            switch response.result {
+            case .success(let json):
+                do {
+                    let news = try News.decode(json: json)
+                    self.news.append(news)
+                } catch {
+                    fatalError("JSON Data Error")
                 }
+                
+            case .failure(let error):
+                // do some thing here
+                print(error)
             }
-        }).resume()
+        }
     }
 }
 
@@ -181,7 +178,7 @@ extension MainViewController {
 extension MainViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        performSegue(withIdentifier: "Detail", sender: nil)
+        performSegue(withIdentifier: "MasterToDetail", sender: nil)
     }
 
     override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {

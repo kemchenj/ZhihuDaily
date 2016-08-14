@@ -7,7 +7,8 @@
 //
 
 import UIKit
-import JavaScriptCore
+import Alamofire
+import AlamofireImage
 
 class DetailViewController: UIViewController {
     
@@ -38,7 +39,7 @@ class DetailViewController: UIViewController {
         layer.startPoint = CGPoint(x: 0.5, y: 0)
         layer.endPoint = CGPoint(x: 0.51, y: 1)
         layer.locations = [0, 1]
-                
+        
         imageView.layer.addSublayer(layer)
         
         return imageView
@@ -52,7 +53,7 @@ class DetailViewController: UIViewController {
         return scrollView
     }
     
-    var story: Story? {
+    var story: Story! {
         didSet {
             self.navigationItem.title = story?.title
             requestContent()
@@ -105,70 +106,54 @@ extension DetailViewController {
 extension DetailViewController {
     
     func requestContent() {
-        let requestURL = URL(string: story!.storyURL)
+        request(story.storyURL, withMethod: .get).responseJSON { (response) in
+            switch response.result {
+            case .success(let json):
+                guard var imageURL = json["image"] as? String,
+                    let body = json["body"] as? String,
+                    let css = json["css"] as? [String] else {
+                        return
+                }
+                
+                imageURL = imageURL.replacingOccurrences(of: "http", with: "https")
+                self.imageView.af_setImageWithURL(URL(string: imageURL)!)
+                
+                let html = self.concatHTML(css: css, body: body)
+                OperationQueue.main.addOperation {
+                    self.webView.loadHTMLString(html, baseURL: nil)
+                }
+                
+            case .failure(let error):
+                // Do some exception handle
+                fatalError("\(error)")
+            }
+        }
         
-        URLSession.shared.dataTask(with: requestURL!, completionHandler: {(data, response, error) in
-            if let error = error {
-                print(error)
-                return
-            }
-            
-            // 简单数据处理
-            guard let data = data,
-                let jsonObject = try? JSONSerialization.jsonObject(with: data,
-                                                                   options: .mutableContainers),
-                let body = jsonObject["body"] as? String,
-                let imageURL = jsonObject["image"] as? String,
-                let css = jsonObject["css"] as? [String] else {
-                    return
-            }
-            
-            if let url = URL(string:imageURL.replacingOccurrences(of: "http", with: "https")){
-                self.requestImage(from: url)
-            }
-            
-            var html = "<html>"
-            html += "<head>"
-            html += "<link rel=\"stylesheet\" href=\(css[0])>"
-            html += "<style>img{max-width:320px !important;}</style>"
-            html += "</head>"
-            html += "<body>"
-            html += body
-            html += "</body>"
-            html += "</html>"
-            
-            //            html = html.replacingOccurrences(of: "http", with: "https")
-            
-            DispatchQueue.main.async {
-                self.webView.loadHTMLString(html, baseURL: nil)
-            }
-        }).resume()
     }
     
-    func requestImage(from url: URL) {
-        let request = URLRequest(
-            url: url,
-            cachePolicy: .returnCacheDataElseLoad)
+    // 拼接
+    func concatHTML(css: [String], body: String) -> String {
+        var html = "<html>"
         
-        URLSession.shared.dataTask(with: request, completionHandler: { (data, response, error) in
-            if let error = error {
-                print(error)
-                return
-            }
-            
-            guard let data = data,
-                let image = UIImage(data: data) else {
-                    fatalError("Data Wrong")
-            }
-            
-            DispatchQueue.main.async {
-                self.imageView.image = image
-                UIView.animate(withDuration: 1, animations: {
-                    self.imageView.alpha = 1
-                })
-            }
-        }).resume()
+        html += "<head>"
+        css.forEach { (css) in
+            html += "<link rel=\"stylesheet\" href=\(css)>"
+        }
+        html += "<style>img{max-width:320px !important;}</style>"
+        html += "</head>"
+        
+        html += "<body>"
+        html += body
+        html += "</body>"
+        
+        html += "</html>"
+        
+        // Body 内的所有图片都换成 https 协议
+        html.replacingOccurrences(of: "http", with: "https")
+        
+        return html
     }
+
 }
 
 

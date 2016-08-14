@@ -133,26 +133,7 @@ extension BannerView {
             if let image = model.bannerImage {
                 imageView.image = image
             } else if let imageURL = model.bannerImageURL {
-                let request = URLRequest(
-                    url: imageURL,
-                    cachePolicy: .returnCacheDataElseLoad)
-                
-                URLSession.shared.dataTask(with: request, completionHandler: { (data, response, error) in
-                    if let error = error {
-                        print(error)
-                        return
-                    }
-                    
-                    guard let data = data,
-                        let image = UIImage(data: data) else {
-                            print("Image Error")
-                            return
-                    }
-                    
-                    OperationQueue.main.addOperation {
-                        imageView.image = image
-                    }
-                }).resume()
+                imageView.af_setImageWithURL(model.bannerImageURL!)
             }
         }
     }

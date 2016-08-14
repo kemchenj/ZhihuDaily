@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import Alamofire
+import AlamofireImage
 
 let themeColor = UIColor(red: 56/255,
                          green: 179/255,
@@ -27,9 +29,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window?.rootViewController = mainVC
         window?.makeKeyAndVisible()
         
+        setupLaunchImage()
+        
+        return true
+    }
+
+}
+
+
+// Mark: - Setup LaunchImage
+
+extension AppDelegate {
+    
+    func setupLaunchImage() {
         // 启动页
-        if let data = UserDefaults.standard.value(forKey: "LaunchImage") as? Data,
-            let image = UIImage(data: data) {
+        if let data = UserDefaults.standard.value(forKey: "LaunchImage") as? Data, let image = UIImage(data: data) {
             
             let splashView = UIImageView(frame: UIScreen.main.bounds)
             // splashView.alpha = 0
@@ -38,69 +52,46 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             window?.bringSubview(toFront: splashView)
             splashView.image = image
             
-            UIView.animate(withDuration: 3, delay: 0,
-                           options: [.curveEaseOut], animations: {
-                            splashView.transform = CGAffineTransform(scaleX: 1.2, y: 1.2)
-                            splashView.alpha = 1
-                }, completion: { (_) in
+            UIView.animate(
+                withDuration: 2,
+                delay: 0,
+                options: [.curveEaseOut],
+                animations: {
+                    splashView.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
+                    splashView.alpha = 1
+                },
+                completion: { (_) in
                     splashView.removeFromSuperview()
             })
         }
         downloadNewImage()
-        
-        return true
     }
     
     func downloadNewImage() {
         let url = URL(string: "https://news-at.zhihu.com/api/4/start-image/1080*1776")!
         
-        NetworkClient.shared.getData(from: url, completion: { json in
-            guard let urlString = json["img"] as? String,
-                  let url = URL(string: urlString) else {
-                    return
-            }
-            
-            NetworkClient.shared.getData(from: url, completion: { data in
-                guard let 
+        request(url, withMethod: .get).responseJSON { (response) in
+            switch response.result {
+            case .success(let json):
+                guard let imgURLString = (json["img"] as? String)?.replacingOccurrences(of: "http", with: "https"),
+                    let imgURL = URL(string: imgURLString) else {
+                        fatalError()
+                }
                 
-            })
-        })
-        
-        //        URLSession.shared.dataTask(with: request, completionHandler: { (data, response, error) in
-        //            if let error = error {
-        //                print("******* \(error)")
-        //            }
-        //
-        //            guard let data = data,
-        //                let json = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers),
-        //                let urlString = json["img"] as? String else {
-        //                    print("Data Wrong")
-        //                    return
-        //            }
-        //
-        //            let request = URLRequest(url: URL(string: urlString)!)
-        //
-        //            URLSession.shared.dataTask(with: request, completionHandler: { (data, response, error) in
-        //                if let error = error {
-        ////                    fatalError("\(error)")
-        //                    return
-        //                }
-        //
-        //                guard let data = data else {
-        //                    print("Image Data Error")
-        //                    return
-        //                }
-        //
-        //                UserDefaults.standard.set(data, forKey: "LaunchImage")
-        //            }).resume()
-        //        }).resume()
-    }
-    
-    
-    // 处理Background Download Task
-    var backgroundSessionCompletionHandler: (() -> Void)?
-    func application(_ application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: () -> Void) {
-        backgroundSessionCompletionHandler = completionHandler
+                request(imgURL, withMethod: .get).responseData(completionHandler: { (response) in
+                    switch response.result {
+                    case .success(let data):
+                        UserDefaults.standard.set(data, forKey: "LaunchImage")
+                        
+                    case .failure(let error):
+                        fatalError("   ")
+                    }
+                })
+                
+            case .failure(let error):
+                print(error)
+            }
+        }
     }
 }
 

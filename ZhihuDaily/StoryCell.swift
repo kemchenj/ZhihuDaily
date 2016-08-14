@@ -13,7 +13,14 @@ class StoryCell: UITableViewCell {
     
     @IBOutlet weak var thumbNail: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
-
+    
+    var story: Story! {
+        didSet {
+            self.titleLabel.text = story.title
+            getThumbnail(of: story)
+        }
+    }
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         
@@ -21,8 +28,7 @@ class StoryCell: UITableViewCell {
     }
 
     func configure(for story: Story) {
-        self.titleLabel.text = story.title
-        getThumbnail(of: story)
+        self.story = story
     }
 
     func getThumbnail(of story: Story) {
