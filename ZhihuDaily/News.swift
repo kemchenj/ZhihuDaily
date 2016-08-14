@@ -16,7 +16,7 @@ struct News {
     var stories: [Story]
     var topStories: [Story]?
     
-    var date: String {
+    var beautifulDate: String {
         let str = dateString as NSString
         let year = str.substring(to: 4)
         let month = (str.substring(from: 4) as NSString).substring(to: 2)
@@ -44,13 +44,13 @@ extension News {
     }
 }
 
-// JSON转模型
+// MARK: - JSON转模型
 extension News: DecodeableModel {
     
     static func decode(json: AnyObject) throws -> News {
         guard let dateString = json["date"] as? String,
               let storyDicts = json["stories"] as? [[String: AnyObject]] else {
-                throw NetworkClientError.invalidContent
+                throw DecodeError.invalidContent
         }
         
         var topStories: [Story]?

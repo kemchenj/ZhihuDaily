@@ -10,11 +10,6 @@ import UIKit
 import Alamofire
 import AlamofireImage
 
-let themeColor = UIColor(red: 56/255,
-                         green: 179/255,
-                         blue: 245/255,
-                         alpha: 1)
-
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
     

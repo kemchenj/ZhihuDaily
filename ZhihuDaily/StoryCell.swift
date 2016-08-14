@@ -17,7 +17,7 @@ class StoryCell: UITableViewCell {
     var story: Story! {
         didSet {
             self.titleLabel.text = story.title
-            getThumbnail(of: story)
+            self.thumbNail.af_setImageWithURL(story.thumbNailURL)
         }
     }
     
@@ -31,27 +31,4 @@ class StoryCell: UITableViewCell {
         self.story = story
     }
 
-    func getThumbnail(of story: Story) {
-        let request = URLRequest(
-            url: URL(string: story.thumbNailURL.replacingOccurrences(of: "http",
-                                                                     with: "https"))!,
-            cachePolicy: .returnCacheDataElseLoad)
-        
-        URLSession.shared.dataTask(with: request) { (data, response, error) in
-            if let error = error {
-                print(error)
-                return
-            }
-            
-            guard let data = data,
-                let tempImage = UIImage(data: data) else {
-                    print("data Error")
-                    return
-            }
-            
-            DispatchQueue.main.async {
-                self.thumbNail.image = tempImage
-            }
-        }.resume()
-    }
 }

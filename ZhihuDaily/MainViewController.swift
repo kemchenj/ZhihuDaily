@@ -68,13 +68,15 @@ extension MainViewController {
         bar?.shadowImage = UIImage()
         bar?.setBackgroundImage(UIImage(), for: .default)
         bar?.isTranslucent = false
-        bar?.barTintColor = themeColor
+        bar?.barTintColor = Theme.mainColor
     }
     
     func configureTableView() {
         tableView.rowHeight = 101
         tableView.estimatedRowHeight = 101
         tableView.contentInset.top = -64
+        
+        tableView.register(UITableViewHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: "header")
                 
         tableView.delegate = self
         tableView.dataSource = self
@@ -148,10 +150,6 @@ extension MainViewController: URLSessionTaskDelegate, URLSessionDelegate {
 // Mark: - Data Source
 extension MainViewController {
     
-    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return news[section].date
-    }
-    
     override func numberOfSections(in tableView: UITableView) -> Int {
         return news.count
     }
@@ -176,6 +174,26 @@ extension MainViewController {
 
 // Mark: - Delegate
 extension MainViewController {
+    
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: "header")
+        
+        header?.textLabel?.text = news[section].beautifulDate
+        header?.textLabel?.textColor = UIColor.white
+        header?.textLabel?.font = UIFont.boldSystemFont(ofSize: 14)
+        
+        let backgroundView = UIView(frame: header!.frame)
+        backgroundView.backgroundColor = Theme.mainColor
+        
+        header?.backgroundView = backgroundView
+        
+        return header
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 40
+    }
+    
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         performSegue(withIdentifier: "MasterToDetail", sender: nil)
