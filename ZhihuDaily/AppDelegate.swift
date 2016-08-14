@@ -79,6 +79,7 @@ extension AppDelegate {
                         UserDefaults.standard.set(data, forKey: "LaunchImage")
                         
                     case .failure(let error):
+                        print(error)
                         fatalError("   ")
                     }
                 })

@@ -30,19 +30,12 @@ class DetailViewController: UIViewController {
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         
-        let imageSize = CGSize(width: UIScreen.main.bounds.width,
-                               height: 200)
-        
-        let layer = CAGradientLayer()
-        layer.frame = CGRect(origin: CGPoint.zero,
-                             size: imageSize)
-        layer.colors = [UIColor.black.withAlphaComponent(0.8).cgColor,
-                        UIColor.clear.cgColor]
-        layer.startPoint = CGPoint(x: 0.5, y: 0)
-        layer.endPoint = CGPoint(x: 0.51, y: 1)
-        layer.locations = [0, 1]
-        
-        imageView.layer.addSublayer(layer)
+        imageView.drawLinearGradient(startColor: UIColor.black.withAlphaComponent(0.5),
+                                     endColor: UIColor.clear,
+                                     startPoint: CGPoint(x: 0.5,
+                                                         y: 0),
+                                     endPoint: CGPoint(x: 0.5,
+                                                       y: 1))
         
         return imageView
     }()
@@ -89,7 +82,8 @@ extension DetailViewController {
 // MARK: - Setup
 
 extension DetailViewController {
-    func setupNavigationBar() {
+    
+    private func setupNavigationBar() {
         let bar = navigationController?.navigationBar
         bar?.shadowImage = UIImage()
         bar?.setBackgroundImage(UIImage(), for: .default)
@@ -97,7 +91,7 @@ extension DetailViewController {
         navigationBarBackgroundImage!.alpha = 0
     }
     
-    func setupWebView() {
+    private func setupWebView() {
         webView.backgroundColor = UIColor.white
         
         webScrollView.clipsToBounds = false
@@ -114,7 +108,7 @@ extension DetailViewController {
 
 extension DetailViewController {
     
-    func requestContent() {
+    private func requestContent() {
         request(story.storyURL, withMethod: .get).responseJSON { (response) in
             switch response.result {
             case .success(let json):
@@ -140,7 +134,7 @@ extension DetailViewController {
     }
     
     // 拼接
-    func concatHTML(css: [String], body: String) -> String {
+    private func concatHTML(css: [String], body: String) -> String {
         var html = "<html>"
         
         html += "<head>"

@@ -8,6 +8,8 @@
 
 import UIKit
 
+
+
 // 给Model用的协议，符合这一个协议的Model都可以被BannerView展示
 protocol ModelBannerCanPresent {
     var bannerTitle: String { get }
