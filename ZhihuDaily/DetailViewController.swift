@@ -22,11 +22,10 @@ class DetailViewController: UIViewController {
     }
     
     let imageView: UIImageView = {
-        let imageView = UIImageView(
-            frame: CGRect(x: 0,
-                          y: 0,
-                          width: UIScreen.main.bounds.width,
-                          height: 200))
+        let imageView = UIImageView(frame: CGRect(x: 0,
+                                                  y: 0,
+                                                  width: UIScreen.main.bounds.width,
+                                                  height: 200))
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         
@@ -97,7 +96,11 @@ extension DetailViewController {
         webScrollView.clipsToBounds = false
         webScrollView.addSubview(imageView)
         webScrollView.delegate = self
+        
         webScrollView.contentInset.top = -64
+        webScrollView.contentInset.bottom = 44
+        
+        webScrollView.scrollIndicatorInsets.top = -64
         webScrollView.contentInset.bottom = 44
     }
 }
@@ -112,14 +115,13 @@ extension DetailViewController {
         request(story.storyURL, withMethod: .get).responseJSON { (response) in
             switch response.result {
             case .success(let json):
-                guard var imageURL = json["image"] as? String,
+                guard let imageURL = json["image"] as? String,
                       let body = json["body"] as? String,
                       let css = json["css"] as? [String] else {
                         return
                 }
                 
-                imageURL = imageURL.replacingOccurrences(of: "http", with: "https")
-                self.imageView.af_setImageWithURL(URL(string: imageURL)!)
+                self.imageView.af_setImageWithURL(URL(string: imageURL.replacingOccurrences(of: "http", with: "https"))!)
                 
                 let html = self.concatHTML(css: css, body: body)
                 OperationQueue.main.addOperation {
@@ -133,7 +135,7 @@ extension DetailViewController {
         }
     }
     
-    // 拼接
+    // 拼接HTML
     private func concatHTML(css: [String], body: String) -> String {
         var html = "<html>"
         
@@ -153,7 +155,7 @@ extension DetailViewController {
         
         return html
     }
-
+    
 }
 
 
@@ -164,5 +166,9 @@ extension DetailViewController: UIScrollViewDelegate {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         navigationBarBackgroundImage?.alpha = (scrollView.contentOffset.y - 64) / 200
+        imageView.frame.size.height = max(200 - (scrollView.contentOffset.y - 64), 200)
+        imageView.frame.origin.y = min(scrollView.contentOffset.y - 64, 0)
+        
+        scrollView.layoutIfNeeded()
     }
 }
