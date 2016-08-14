@@ -10,6 +10,8 @@ import UIKit
 import Alamofire
 import AlamofireImage
 
+
+
 class DetailViewController: UIViewController {
     
     @IBOutlet weak var webView: UIWebView!
@@ -64,17 +66,15 @@ class DetailViewController: UIViewController {
 
 
 
-// Mark: - View
+// MARK: - View Life Cycle
 
 extension DetailViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        webView.backgroundColor = UIColor.white
-        
-        configureNavigationBar()
-        configureWebView()
+        setupNavigationBar()
+        setupWebView()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -82,8 +82,14 @@ extension DetailViewController {
         
         navigationBarBackgroundImage?.alpha = (webScrollView.contentOffset.y - 64) / 200
     }
-    
-    func configureNavigationBar() {
+}
+
+
+
+// MARK: - Setup
+
+extension DetailViewController {
+    func setupNavigationBar() {
         let bar = navigationController?.navigationBar
         bar?.shadowImage = UIImage()
         bar?.setBackgroundImage(UIImage(), for: .default)
@@ -91,7 +97,9 @@ extension DetailViewController {
         navigationBarBackgroundImage!.alpha = 0
     }
     
-    func configureWebView() {
+    func setupWebView() {
+        webView.backgroundColor = UIColor.white
+        
         webScrollView.clipsToBounds = false
         webScrollView.addSubview(imageView)
         webScrollView.delegate = self
@@ -101,7 +109,8 @@ extension DetailViewController {
 }
 
 
-// Mark: Web Request
+
+// MARK: Web Request
 
 extension DetailViewController {
     
@@ -110,8 +119,8 @@ extension DetailViewController {
             switch response.result {
             case .success(let json):
                 guard var imageURL = json["image"] as? String,
-                    let body = json["body"] as? String,
-                    let css = json["css"] as? [String] else {
+                      let body = json["body"] as? String,
+                      let css = json["css"] as? [String] else {
                         return
                 }
                 
@@ -128,7 +137,6 @@ extension DetailViewController {
                 fatalError("\(error)")
             }
         }
-        
     }
     
     // 拼接
@@ -136,9 +144,7 @@ extension DetailViewController {
         var html = "<html>"
         
         html += "<head>"
-        css.forEach { (css) in
-            html += "<link rel=\"stylesheet\" href=\(css)>"
-        }
+        css.forEach { html += "<link rel=\"stylesheet\" href=\($0)>" }
         html += "<style>img{max-width:320px !important;}</style>"
         html += "</head>"
         
@@ -149,7 +155,7 @@ extension DetailViewController {
         html += "</html>"
         
         // Body 内的所有图片都换成 https 协议
-        html.replacingOccurrences(of: "http", with: "https")
+        html = html.replacingOccurrences(of: "http", with: "https")
         
         return html
     }
@@ -158,7 +164,7 @@ extension DetailViewController {
 
 
 
-// Mark: - Scroll View
+// MARK: - Scroll View
 
 extension DetailViewController: UIScrollViewDelegate {
     

@@ -21,36 +21,21 @@ protocol ModelBannerCanPresent {
 class BannerView: UIView {
     private var scrollView: UIScrollView = {
         
-        // 加一层渐变的layer
-        let layer: CAGradientLayer = {
-            let imageSize = CGSize(
-                width: UIScreen.main.bounds.width,
-                height: 500)
-            
-            let layer = CAGradientLayer()
-            layer.frame = CGRect(origin: CGPoint.zero,
-                                 size: imageSize)
-            layer.colors = [
-                UIColor.black.withAlphaComponent(0.5).cgColor,
-                UIColor.clear.cgColor
-            ]
-            
-            layer.startPoint = CGPoint(x: 0.5, y: 0)
-            layer.endPoint = CGPoint(x: 0.51, y: 1)
-            layer.locations = [0, 1]
-            
-            return layer
-        }()
-        
         // 配置ScrollView
         let scrollView = UIScrollView()
         
-        scrollView.layer.addSublayer(layer)
         scrollView.clipsToBounds = true
         scrollView.showsHorizontalScrollIndicator = false
         scrollView.isOpaque = true
         scrollView.isPagingEnabled = true
         scrollView.backgroundColor = UIColor.black
+        
+        scrollView.drawLinearGradient(startColor: UIColor.black.withAlphaComponent(0.5),
+                                      endColor: UIColor.clear,
+                                      startPoint: CGPoint(x: 0,
+                                                          y: 0),
+                                      endPoint: CGPoint(x: 0.5,
+                                                        y: 0.5))
         
         return scrollView
     }()
@@ -78,7 +63,7 @@ class BannerView: UIView {
 
 
 
-// Mark: - Update UI
+// MARK: - Update UI
 
 extension BannerView {
     
@@ -133,7 +118,7 @@ extension BannerView {
             if let image = model.bannerImage {
                 imageView.image = image
             } else if let imageURL = model.bannerImageURL {
-                imageView.af_setImageWithURL(model.bannerImageURL!)
+                imageView.af_setImageWithURL(imageURL)
             }
         }
     }
@@ -141,7 +126,7 @@ extension BannerView {
 
 
 
-// Mark: - Configure
+// MARK: - Configure
 
 extension BannerView {
     

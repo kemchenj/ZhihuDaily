@@ -40,7 +40,7 @@ class MainViewController: UITableViewController {
 
 
 
-// Mark: - View
+// MARK: - View
 
 extension MainViewController {
     
@@ -111,7 +111,7 @@ extension MainViewController {
 
 
 
-// Mark: - Get Data
+// MARK: - Get Data
 
 extension MainViewController: URLSessionTaskDelegate, URLSessionDelegate {
     
@@ -145,9 +145,9 @@ extension MainViewController: URLSessionTaskDelegate, URLSessionDelegate {
 
 
 
-// Mark: - Table View Delegate/DataSource
+// MARK: - Table View Delegate/DataSource
 
-// Mark: - Data Source
+// MARK: - Data Source
 extension MainViewController {
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -172,7 +172,7 @@ extension MainViewController {
     }
 }
 
-// Mark: - Delegate
+// MARK: - Delegate
 extension MainViewController {
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {

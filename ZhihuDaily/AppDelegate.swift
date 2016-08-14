@@ -32,7 +32,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 }
 
 
-// Mark: - Setup LaunchImage
+// MARK: - Setup LaunchImage
 
 extension AppDelegate {
     
