@@ -1,7 +1,7 @@
 # 知乎日报
-> **平台:** iOS 10, Xcode 8.0(beta 4)
+> **平台:** iOS 10, Xcode 8.0(beta 5)
 >
-> **语言:** Swift 3.0(beta 4)
+> **语言:** Swift 3.0(beta 5)
 >
 > **第三方库:** Alamofire, AlamofireImage
 
@@ -36,3 +36,5 @@
 - [ ] 点赞
 - [ ] 上下拉切换文章
 - [ ] 分享
+
+
