@@ -106,3 +106,18 @@ extension UIViewControllerContextTransitioning {
     }
 
 }
+
+// 计算文字高度
+extension String {
+    
+    func getHeight(givenWidth: CGFloat, font: UIFont) -> CGFloat {
+        let text = self as NSString
+        let attributes = [NSFontAttributeName: font]
+        let rect = text.boundingRect(with: CGSize(width: givenWidth,
+                                       height: CGFloat.infinity),
+                          options: .usesLineFragmentOrigin,
+                          attributes: attributes, context: nil)
+        
+        return rect.height
+    }
+}

@@ -14,7 +14,7 @@ import AlamofireImage
 
 class DetailViewController: UIViewController {
     
-    var imageViewHeight: CGFloat = 200
+    var imageViewHeight: CGFloat = 264
     
     @IBOutlet weak var webView: UIWebView!
     @IBOutlet weak var toolBar: UIToolbar!

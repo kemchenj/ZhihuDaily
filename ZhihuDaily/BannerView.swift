@@ -23,7 +23,7 @@ protocol ModelBannerCanPresent {
 
 // 代理
 protocol BannerViewDelegate {
-    func tapBanner()
+    func tapBanner(model: ModelBannerCanPresent)
 }
 
 
@@ -33,15 +33,43 @@ class BannerView: UIView {
     var delegate: BannerViewDelegate?
     
     private var collectionView: UICollectionView!
+    private var pageControl: UIPageControl!
     
     private var pageAmount: Int {
         return models.count
     }
     
+    private var currentPage: Int {
+        var currentPage: Int
+        let realPage = Int(collectionView.contentOffset.x / UIScreen.main.bounds.width + 0.5)
+        
+        if realPage == 6 {
+            currentPage = 0
+        } else if realPage == 0 {
+            currentPage = 4
+        } else {
+            currentPage = realPage - 1
+        }
+        
+        return currentPage
+    }
+    
     private var banners = [(label: UILabel, imageView: UIImageView)]()
     var models = [ModelBannerCanPresent]() {
         didSet {
-           collectionView.reloadData()
+            collectionView.contentOffset.x = UIScreen.main.bounds.width
+            collectionView.reloadData()
+        }
+    }
+    
+    var offsetY: CGFloat = 0 {
+        didSet {
+            collectionView.visibleCells.forEach { (cell) in
+                let imageView = cell.contentView.subviews[0].subviews[0]
+
+                imageView.frame.origin.y = min(offsetY, 0)
+                imageView.frame.size.height = max(frame.height - offsetY, frame.height)
+            }
         }
     }
     
@@ -49,6 +77,7 @@ class BannerView: UIView {
         super.awakeFromNib()
         
         setupCollectionView()
+        setupPageControl()
     }
 }
 
@@ -68,6 +97,7 @@ extension BannerView {
         collectionView.isPagingEnabled = true
         collectionView.showsVerticalScrollIndicator = false
         collectionView.showsHorizontalScrollIndicator = false
+        collectionView.clipsToBounds = false
         collectionView.drawLinearGradient(startColor: UIColor.black,
                                           endColor: UIColor.white,
                                           startPoint: CGPoint(x: 0.5,
@@ -87,6 +117,16 @@ extension BannerView {
         
         //
         addSubview(collectionView)
+    }
+    
+    private func setupPageControl() {
+        pageControl = UIPageControl(frame: CGRect(x: 0,
+                                                  y: frame.height - 37,
+                                                  width: UIScreen.main.bounds.width,
+                                                  height: 37))
+        pageControl.numberOfPages = 5
+        
+        addSubview(pageControl)
     }
     
 }
@@ -139,6 +179,10 @@ extension BannerView: UICollectionViewDataSource {
 
 extension BannerView: UICollectionViewDelegate {
     
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        delegate?.tapBanner(model: models[currentPage])
+    }
+    
     func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         
         let screenWidth = UIScreen.main.bounds.width
@@ -151,5 +195,12 @@ extension BannerView: UICollectionViewDelegate {
             
         default: break
         }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        pageControl.currentPage = currentPage
     }
 }

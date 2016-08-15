@@ -18,12 +18,9 @@ class MainViewController: UITableViewController {
         return (navigationController?.navigationBar.subviews.first)
     }
     
-    var topStories: [ModelBannerCanPresent] {
-        set {
+    var topStories = [ModelBannerCanPresent]() {
+        didSet {
             imageBanner.models = topStories
-        }
-        get {
-            return imageBanner.models
         }
     }
     
@@ -38,6 +35,8 @@ class MainViewController: UITableViewController {
     var navigationBarAlpha:CGFloat {
         return (tableView.contentOffset.y - 64) / 250
     }
+    
+    var selectedStory: Story!
 }
 
 
@@ -51,6 +50,7 @@ extension MainViewController {
         
         setupNavigationBar()
         setupTableView()
+        setupImageBanner()
         
         loadLatestNews()
     }
@@ -64,12 +64,10 @@ extension MainViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
         switch segue.identifier! {
         case "MasterToDetail":
-            guard let destinationVC = segue.destination as? DetailViewController,
-                let cell = tableView.cellForRow(at: tableView.indexPathForSelectedRow!) as? StoryCell else {
+            guard let destinationVC = segue.destination as? DetailViewController else {
                     fatalError()
             }
-            
-            destinationVC.story = cell.story
+            destinationVC.story = selectedStory
             
         default: break
         }
@@ -99,25 +97,29 @@ extension MainViewController {
         tableView.clipsToBounds = false
         tableView.backgroundColor = UIColor.white
         
-        tableView.tableHeaderView?.frame = CGRect(origin: .zero,
-                                                  size: CGSize(width: UIScreen.main.bounds.width,
-                                                               height: 264))
-        tableView.layoutSubviews()
-//        tableView.reloadData()
-        
         tableView.register(UITableViewHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: "header")
         
         tableView.delegate = self
         tableView.dataSource = self
     }
     
+    private func setupImageBanner() {
+        imageBanner.delegate = self
+    }
+}
+
+
+
+// MARK: - Configure
+
+extension MainViewController {
+
     private func configureImageBanner() {
-        imageBanner.models = news[0].topStories!.map {
+        imageBanner.models = topStories.map {
             (story) -> ModelBannerCanPresent in
             return story as ModelBannerCanPresent
         }
     }
-    
 }
 
 
@@ -144,7 +146,7 @@ extension MainViewController: URLSessionTaskDelegate, URLSessionDelegate {
                     let news = try News.decode(json: json)
                     self.news.append(news)
                     if self.news.count == 1 {
-                        self.configureImageBanner()
+                        self.updateTopStories()
                     }
                 } catch {
                     fatalError("JSON Data Error")
@@ -155,6 +157,12 @@ extension MainViewController: URLSessionTaskDelegate, URLSessionDelegate {
                 print(error)
             }
         }
+    }
+    
+    private func updateTopStories() {
+        topStories = news[0].topStories!.map({ (story) -> ModelBannerCanPresent in
+            return story as ModelBannerCanPresent
+        })
     }
 }
 
@@ -211,6 +219,9 @@ extension MainViewController {
     
     // Row
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let cell = tableView.cellForRow(at: indexPath) as? StoryCell
+        selectedStory = cell?.story
+        
         performSegue(withIdentifier: "MasterToDetail", sender: nil)
     }
     
@@ -242,6 +253,27 @@ extension MainViewController {
     // Scroll
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
         navigationBarBackgroundImage!.alpha = navigationBarAlpha
+        
+        if !news.isEmpty {
+            imageBanner.offsetY = scrollView.contentOffset.y - 64
+        }
     }
+}
+
+
+
+// MARK: - BannerView Delegate
+
+extension MainViewController: BannerViewDelegate {
     
+    func tapBanner(model: ModelBannerCanPresent) {
+        guard let story = model as? Story else {
+            fatalError()
+        }
+        
+        selectedStory = story
+        
+        performSegue(withIdentifier: "MasterToDetail", sender: nil)
+    }
+
 }
