@@ -30,7 +30,7 @@ struct News {
         self.stories = stories
         self.topStories = topStories
     }
-
+    
 }
 
 extension News {
@@ -49,7 +49,7 @@ extension News: DecodeableModel {
     
     static func decode(json: AnyObject) throws -> News {
         guard let dateString = json["date"] as? String,
-              let storyDicts = json["stories"] as? [[String: AnyObject]] else {
+            let storyDicts = json["stories"] as? [[String: AnyObject]] else {
                 throw DecodeError.invalidContent
         }
         

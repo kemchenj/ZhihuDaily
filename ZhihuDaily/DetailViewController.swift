@@ -14,6 +14,8 @@ import AlamofireImage
 
 class DetailViewController: UIViewController {
     
+    var imageViewHeight: CGFloat = 200
+    
     @IBOutlet weak var webView: UIWebView!
     @IBOutlet weak var toolBar: UIToolbar!
     
@@ -21,23 +23,7 @@ class DetailViewController: UIViewController {
         return (navigationController?.navigationBar.subviews.first)
     }
     
-    let imageView: UIImageView = {
-        let imageView = UIImageView(frame: CGRect(x: 0,
-                                                  y: 0,
-                                                  width: UIScreen.main.bounds.width,
-                                                  height: 200))
-        imageView.contentMode = .scaleAspectFill
-        imageView.clipsToBounds = true
-        
-        imageView.drawLinearGradient(startColor: UIColor.black.withAlphaComponent(0.5),
-                                     endColor: UIColor.clear,
-                                     startPoint: CGPoint(x: 0.5,
-                                                         y: 0),
-                                     endPoint: CGPoint(x: 0.5,
-                                                       y: 1))
-        
-        return imageView
-    }()
+    var imageView: UIImageView!
     
     var webScrollView: UIScrollView {
         guard let scrollView = webView.subviews[0] as? UIScrollView else {
@@ -65,14 +51,14 @@ extension DetailViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setupNavigationBar()
+        setupBanner()
         setupWebView()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        navigationBarBackgroundImage?.alpha = (webScrollView.contentOffset.y - 64) / 200
+        navigationBarBackgroundImage?.alpha = (webScrollView.contentOffset.y - 64) / imageViewHeight
     }
 }
 
@@ -82,26 +68,32 @@ extension DetailViewController {
 
 extension DetailViewController {
     
-    private func setupNavigationBar() {
-        let bar = navigationController?.navigationBar
-        bar?.shadowImage = UIImage()
-        bar?.setBackgroundImage(UIImage(), for: .default)
-        bar?.isTranslucent = false
-        navigationBarBackgroundImage!.alpha = 0
-    }
-    
     private func setupWebView() {
         webView.backgroundColor = UIColor.white
         
-        webScrollView.clipsToBounds = false
         webScrollView.addSubview(imageView)
+        webScrollView.clipsToBounds = false
         webScrollView.delegate = self
-        
+
         webScrollView.contentInset.top = -64
-        webScrollView.contentInset.bottom = 44
-        
         webScrollView.scrollIndicatorInsets.top = -64
-        webScrollView.contentInset.bottom = 44
+    }
+    
+    private func setupBanner() {
+        imageView = UIImageView(frame: CGRect(x: 0,
+                                              y: 0,
+                                              width: UIScreen.main.bounds.width,
+                                              height: imageViewHeight))
+        
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        
+        imageView.drawLinearGradient(startColor: UIColor.black,
+                                     endColor: UIColor.clear,
+                                     startPoint: CGPoint(x: 0,
+                                                         y: 0),
+                                     endPoint: CGPoint(x: 0,
+                                                       y: 1))
     }
 }
 
@@ -115,6 +107,7 @@ extension DetailViewController {
         request(story.storyURL, withMethod: .get).responseJSON { (response) in
             switch response.result {
             case .success(let json):
+                // 验证数据合理性
                 guard let imageURL = json["image"] as? String,
                       let body = json["body"] as? String,
                       let css = json["css"] as? [String] else {
@@ -150,9 +143,6 @@ extension DetailViewController {
         
         html += "</html>"
         
-        // Body 内的所有图片都换成 https 协议
-        html = html.replacingOccurrences(of: "http", with: "https")
-        
         return html
     }
     
@@ -165,8 +155,9 @@ extension DetailViewController {
 extension DetailViewController: UIScrollViewDelegate {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        navigationBarBackgroundImage?.alpha = (scrollView.contentOffset.y - 64) / 200
-        imageView.frame.size.height = max(200 - (scrollView.contentOffset.y - 64), 200)
+        navigationBarBackgroundImage?.alpha = (scrollView.contentOffset.y - 64) / imageViewHeight
+        
+        imageView.frame.size.height = max(imageViewHeight - (scrollView.contentOffset.y - 64), imageViewHeight)
         imageView.frame.origin.y = min(scrollView.contentOffset.y - 64, 0)
         
         scrollView.layoutIfNeeded()

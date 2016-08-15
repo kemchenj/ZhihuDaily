@@ -68,7 +68,7 @@ extension AppDelegate {
         request(url, withMethod: .get).responseJSON { (response) in
             switch response.result {
             case .success(let json):
-                guard let imgURLString = (json["img"] as? String)?.replacingOccurrences(of: "http", with: "https"),
+                guard let imgURLString = json["img"] as? String,
                     let imgURL = URL(string: imgURLString) else {
                         fatalError()
                 }

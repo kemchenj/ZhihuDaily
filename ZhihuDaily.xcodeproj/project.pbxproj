@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		927650991AA604186B16FEF1 /* Pods_ZhihuDaily.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5CB65594237207BE9675F19B /* Pods_ZhihuDaily.framework */; };
+		C801AFE61D61BCB000191852 /* BannerContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C801AFE51D61BCB000191852 /* BannerContentView.swift */; };
 		C813826F1D60342A0015301F /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = C813826E1D60342A0015301F /* Theme.swift */; };
 		C81382751D6047D80015301F /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C81382741D6047D80015301F /* Extension.swift */; };
 		C83099A81D44A73100D406F6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C83099A71D44A73100D406F6 /* AppDelegate.swift */; };
@@ -28,6 +29,7 @@
 		258C332E2C1E0EE6F6F3B377 /* Pods-ZhihuDaily.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ZhihuDaily.release.xcconfig"; path = "Pods/Target Support Files/Pods-ZhihuDaily/Pods-ZhihuDaily.release.xcconfig"; sourceTree = "<group>"; };
 		5CB65594237207BE9675F19B /* Pods_ZhihuDaily.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ZhihuDaily.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6C5D3110A5D95A41D1BDD2A9 /* Pods-ZhihuDaily.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ZhihuDaily.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ZhihuDaily/Pods-ZhihuDaily.debug.xcconfig"; sourceTree = "<group>"; };
+		C801AFE51D61BCB000191852 /* BannerContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BannerContentView.swift; sourceTree = "<group>"; };
 		C813826E1D60342A0015301F /* Theme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		C81382741D6047D80015301F /* Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
 		C83099A41D44A73100D406F6 /* ZhihuDaily.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ZhihuDaily.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -66,6 +68,15 @@
 				258C332E2C1E0EE6F6F3B377 /* Pods-ZhihuDaily.release.xcconfig */,
 			);
 			name = Pods;
+			sourceTree = "<group>";
+		};
+		C801AFC21D61A20B00191852 /* Banner */ = {
+			isa = PBXGroup;
+			children = (
+				C872BF4D1D45F1170020CEC5 /* BannerView.swift */,
+				C801AFE51D61BCB000191852 /* BannerContentView.swift */,
+			);
+			name = Banner;
 			sourceTree = "<group>";
 		};
 		C830999B1D44A73100D406F6 = {
@@ -143,7 +154,7 @@
 			isa = PBXGroup;
 			children = (
 				C83099C21D44A7A200D406F6 /* StoryCell.swift */,
-				C872BF4D1D45F1170020CEC5 /* BannerView.swift */,
+				C801AFC21D61A20B00191852 /* Banner */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -289,6 +300,7 @@
 				C83099A81D44A73100D406F6 /* AppDelegate.swift in Sources */,
 				C83099C61D44A7A200D406F6 /* News.swift in Sources */,
 				C81382751D6047D80015301F /* Extension.swift in Sources */,
+				C801AFE61D61BCB000191852 /* BannerContentView.swift in Sources */,
 				C83099C41D44A7A200D406F6 /* DetailViewController.swift in Sources */,
 				C83099C71D44A7A200D406F6 /* Story.swift in Sources */,
 				C83099C81D44A7A200D406F6 /* StoryCell.swift in Sources */,
@@ -314,8 +326,10 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -361,8 +375,10 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -390,6 +406,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 6C5D3110A5D95A41D1BDD2A9 /* Pods-ZhihuDaily.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = ZhihuDaily/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -405,6 +422,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 258C332E2C1E0EE6F6F3B377 /* Pods-ZhihuDaily.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = ZhihuDaily/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

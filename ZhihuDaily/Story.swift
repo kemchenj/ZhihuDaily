@@ -53,8 +53,8 @@ extension Story: DecodeableModel {
     
     static func decode(json: AnyObject) throws -> Story {
         guard let title = json["title"] as? String,
-              let id = json["id"] as? Int,
-              let thumbNailURL = (json["images"] as? [String])?.first ?? json["image"] as? String else {
+            let id = json["id"] as? Int,
+            let thumbNailURL = (json["images"] as? [String])?.first ?? json["image"] as? String else {
                 throw DecodeError.invalidContent
         }
         

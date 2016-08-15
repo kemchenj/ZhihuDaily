@@ -12,6 +12,7 @@ import UIKit
 
 // 给Model用的协议，符合这一个协议的Model都可以被BannerView展示
 protocol ModelBannerCanPresent {
+    
     var bannerTitle: String { get }
     
     var bannerImageURL: URL? { get }
@@ -20,131 +21,135 @@ protocol ModelBannerCanPresent {
 
 
 
+// 代理
+protocol BannerViewDelegate {
+    func tapBanner()
+}
+
+
+
 class BannerView: UIView {
-    private var scrollView: UIScrollView = {
-        
-        // 配置ScrollView
-        let scrollView = UIScrollView()
-        
-        scrollView.clipsToBounds = true
-        scrollView.showsHorizontalScrollIndicator = false
-        scrollView.isOpaque = true
-        scrollView.isPagingEnabled = true
-        scrollView.backgroundColor = UIColor.black
-        
-        scrollView.drawLinearGradient(startColor: UIColor.black.withAlphaComponent(0.5),
-                                      endColor: UIColor.clear,
-                                      startPoint: CGPoint(x: 0,
-                                                          y: 0),
-                                      endPoint: CGPoint(x: 0.5,
-                                                        y: 0.5))
-        
-        return scrollView
-    }()
     
-    private var stackView: UIStackView!
+    var delegate: BannerViewDelegate?
+    
+    private var collectionView: UICollectionView!
     
     private var pageAmount: Int {
         return models.count
     }
     
     private var banners = [(label: UILabel, imageView: UIImageView)]()
-    var models: [ModelBannerCanPresent]! {
+    var models = [ModelBannerCanPresent]() {
         didSet {
-            updateBanner()
+           collectionView.reloadData()
         }
     }
     
     override func awakeFromNib() {
         super.awakeFromNib()
         
-        configureScrollView()
-        configureStackView()
+        setupCollectionView()
     }
 }
 
 
 
-// MARK: - Update UI
+// MARK: - Setup
 
 extension BannerView {
     
-    private func updateBanner() {
-        let width = UIScreen.main.bounds.width
+    private func setupCollectionView() {
+        // 初始化
+        let layout = UICollectionViewFlowLayout()
+        collectionView = UICollectionView(frame: frame, collectionViewLayout: layout)
+        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "Banner")
         
-        stackView.frame.size.width *= CGFloat(pageAmount)
+        // 配置
+        collectionView.isPagingEnabled = true
+        collectionView.showsVerticalScrollIndicator = false
+        collectionView.showsHorizontalScrollIndicator = false
+        collectionView.drawLinearGradient(startColor: UIColor.black,
+                                          endColor: UIColor.white,
+                                          startPoint: CGPoint(x: 0.5,
+                                                              y: 0),
+                                          endPoint: CGPoint(x: 0.5,
+                                                            y: 1))
         
-        let amount = abs(pageAmount - banners.count)
-        if pageAmount > banners.count {
-            for _ in 0 ..< amount {
-                // 取出模型
-                let model = models[banners.count]
-                
-                // 初始化imageView
-                let imageView = UIImageView()
-                imageView.contentMode = .scaleAspectFill
-                stackView.addArrangedSubview(imageView)
-                
-                // 初始化label
-                let label = UILabel()
-                label.text = model.bannerTitle
-                
-                label.frame = imageView.frame
-                label.frame.origin.y += 30
-                
-                scrollView.addSubview(label)
-                
-                banners.append((label, imageView))
-            }
-        }
+        collectionView.dataSource = self
+        collectionView.delegate = self
         
-        scrollView.contentSize = CGSize(
-            width: width * CGFloat(pageAmount),
-            height: 0)
+        // 设置布局
+        layout.scrollDirection = .horizontal
+        layout.itemSize = CGSize(width: UIScreen.main.bounds.width,
+                                 height: frame.height)
+        layout.minimumLineSpacing = 0
+        layout.minimumInteritemSpacing = 0
         
-        updateUI()
+        //
+        addSubview(collectionView)
     }
     
-    private func updateUI() {
-        let models = self.models.filter { (model) -> Bool in
-            return model != nil
-        }
-        
-        for i in 0 ..< pageAmount {
-            let model = models[i]
-            let label = banners[i].label
-            let imageView = banners[i].imageView
-            
-            label.text = model.bannerTitle
-            
-            if let image = model.bannerImage {
-                imageView.image = image
-            } else if let imageURL = model.bannerImageURL {
-                imageView.af_setImageWithURL(imageURL)
-            }
-        }
-    }
 }
 
 
 
-// MARK: - Configure
+// MARK: - Collection View
 
-extension BannerView {
+// MARK: - Data Source
+
+extension BannerView: UICollectionViewDataSource {
     
-    private func configureScrollView() {
-        scrollView.frame = frame
-        
-        addSubview(scrollView)
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if models.count != 0 {
+            return models.count + 2
+        } else {
+            return 0
+        }
     }
     
-    private func configureStackView() {
-        stackView = UIStackView(frame: frame)
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Banner", for: indexPath)
         
-        stackView.alignment = .fill
-        stackView.distribution = .fillEqually
+        var index: Int
         
-        scrollView.addSubview(stackView)
+        if indexPath.row == 6 {
+            index = 0
+        } else if indexPath.row == 0 {
+            index = 4
+        } else {
+            index = indexPath.row - 1
+        }
+        
+        if !cell.contentView.subviews.isEmpty, let contentView = cell.contentView.subviews[0] as? BannerContentView {
+            contentView.configureModel(model: models[index])
+        } else {
+            let contentView = BannerContentView(frame: CGRect(origin: .zero,
+                                                              size: cell.frame.size))
+            contentView.configureModel(model: models[index])
+            
+            cell.contentView.addSubview(contentView)
+        }
+        
+        return cell
     }
+    
 }
 
+// MARK: - Delegate
+
+extension BannerView: UICollectionViewDelegate {
+    
+    func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        
+        let screenWidth = UIScreen.main.bounds.width
+        switch collectionView.contentOffset.x {
+        case 0:
+            collectionView.contentOffset.x = 5 * screenWidth
+            
+        case 6 * screenWidth:
+            collectionView.contentOffset.x = 1 * screenWidth
+            
+        default: break
+        }
+    }
+}

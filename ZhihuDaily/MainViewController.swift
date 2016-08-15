@@ -9,6 +9,8 @@
 import UIKit
 import Alamofire
 
+
+
 class MainViewController: UITableViewController {
     
     @IBOutlet weak var imageBanner: BannerView!
@@ -28,15 +30,14 @@ class MainViewController: UITableViewController {
     var news = [News]() {
         didSet {
             OperationQueue.main.addOperation {
-                self.tableView.insertSections(IndexSet(integer: self.news.count-1), with: .top)
+                self.tableView.insertSections(IndexSet(integer: self.news.count - 1), with: .top)
             }
         }
     }
     
-    var navigationBarAlpha: CGFloat {
+    var navigationBarAlpha:CGFloat {
         return (tableView.contentOffset.y - 64) / 250
     }
-    
 }
 
 
@@ -47,8 +48,6 @@ extension MainViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        view.backgroundColor = UIColor.white
         
         setupNavigationBar()
         setupTableView()
@@ -62,23 +61,13 @@ extension MainViewController {
         navigationBarBackgroundImage!.alpha = navigationBarAlpha
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
-        let sideMenu = UIView(frame: CGRect(x: -300,
-                                            y: 0,
-                                            width: 300,
-                                            height: view.frame.height))
-        sideMenu.backgroundColor = UIColor.black
-        view.addSubview(sideMenu)
-    }
-    
-    
     override func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
         switch segue.identifier! {
         case "MasterToDetail":
             guard let destinationVC = segue.destination as? DetailViewController,
-                let cell = tableView.cellForRow(at: tableView.indexPathForSelectedRow!) as? StoryCell else { fatalError() }
+                let cell = tableView.cellForRow(at: tableView.indexPathForSelectedRow!) as? StoryCell else {
+                    fatalError()
+            }
             
             destinationVC.story = cell.story
             
@@ -108,6 +97,13 @@ extension MainViewController {
         tableView.estimatedRowHeight = 101
         tableView.contentInset.top = -64
         tableView.clipsToBounds = false
+        tableView.backgroundColor = UIColor.white
+        
+        tableView.tableHeaderView?.frame = CGRect(origin: .zero,
+                                                  size: CGSize(width: UIScreen.main.bounds.width,
+                                                               height: 264))
+        tableView.layoutSubviews()
+//        tableView.reloadData()
         
         tableView.register(UITableViewHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: "header")
         
@@ -115,17 +111,11 @@ extension MainViewController {
         tableView.dataSource = self
     }
     
-    private func setupImageBanner() {
-        imageBanner.models = news[0].topStories!.map { (story) -> ModelBannerCanPresent in
+    private func configureImageBanner() {
+        imageBanner.models = news[0].topStories!.map {
+            (story) -> ModelBannerCanPresent in
             return story as ModelBannerCanPresent
         }
-        
-        imageBanner.addGestureRecognizer(UITapGestureRecognizer(target: self,
-                                                                action: #selector(tapImageBanner)))
-    }
-    
-    func tapImageBanner(gesture: UITapGestureRecognizer) {
-        
     }
     
 }
@@ -145,13 +135,17 @@ extension MainViewController: URLSessionTaskDelegate, URLSessionDelegate {
     }
     
     // <[Private]> Implementaion
-    private func getNews(from newsURL:URL) {
-        request(newsURL, withMethod: .get).responseJSON { (response) in
+    private func getNews(from newsURL: URL) {
+        request(newsURL, withMethod: .get).responseJSON {
+            (response) in
             switch response.result {
             case .success(let json):
                 do {
                     let news = try News.decode(json: json)
                     self.news.append(news)
+                    if self.news.count == 1 {
+                        self.configureImageBanner()
+                    }
                 } catch {
                     fatalError("JSON Data Error")
                 }
@@ -169,6 +163,7 @@ extension MainViewController: URLSessionTaskDelegate, URLSessionDelegate {
 // MARK: - Table View Delegate/DataSource
 
 // MARK: - Data Source
+
 extension MainViewController {
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -180,11 +175,7 @@ extension MainViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        var cell = tableView.dequeueReusableCell(withIdentifier: "Story") as? StoryCell
-        
-        if cell == nil {
-            cell = StoryCell(style: .subtitle, reuseIdentifier: "Story")
-        }
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Story") as? StoryCell
         
         cell?.thumbNail.image = nil
         cell?.configure(for: news[indexPath.section].stories[indexPath.row])
@@ -194,30 +185,27 @@ extension MainViewController {
 }
 
 // MARK: - Delegate
+
 extension MainViewController {
     
     // Header
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        
         let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: "header")
         
         header?.textLabel?.text = news[section].beautifulDate
         header?.textLabel?.textColor = UIColor.white
         header?.textLabel?.font = UIFont.boldSystemFont(ofSize: 14)
         
-        let backgroundView = UIView(frame: header!.frame)
-        backgroundView.backgroundColor = Theme.mainColor
-        
-        header?.backgroundView = backgroundView
+        header?.layer.backgroundColor = Theme.mainColor.cgColor
         
         return header
     }
     
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if section == 0 {
-            return 0
-        } else {
+        if section != 0 {
             return 40
+        } else {
+            return 0
         }
     }
     
@@ -228,13 +216,14 @@ extension MainViewController {
     
     override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         // 提前加载 News
-        if indexPath.section == news.count-1 && indexPath.row == 0 {
+        if indexPath.section == news.count - 1 && indexPath.row == 0 {
             loadPreviousNews()
         }
         
         // 动态修改
         OperationQueue().addOperation {
-            let displaySection = tableView.indexPathsForVisibleRows?.reduce(Int.max, { (partialResult, indexPath) -> Int in
+            let displaySection = tableView.indexPathsForVisibleRows?.reduce(Int.max, {
+                (partialResult, indexPath) -> Int in
                 return min(partialResult, indexPath.section)
             })
             
@@ -255,19 +244,4 @@ extension MainViewController {
         navigationBarBackgroundImage!.alpha = navigationBarAlpha
     }
     
-    
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
