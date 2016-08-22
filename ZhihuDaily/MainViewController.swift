@@ -8,14 +8,22 @@
 
 import UIKit
 import Alamofire
+// import AlamofireImage
 
 
 
 class MainViewController: UITableViewController {
     
+    var bannerHeight: CGFloat = 200
+    
     @IBOutlet weak var imageBanner: BannerView!
+    
     var navigationBarBackgroundImage: UIView? {
         return (navigationController?.navigationBar.subviews.first)
+    }
+    
+    var navigationBarAlpha:CGFloat {
+        return (tableView.contentOffset.y - 64) / bannerHeight
     }
     
     var topStories = [ModelBannerCanPresent]() {
@@ -30,10 +38,6 @@ class MainViewController: UITableViewController {
                 self.tableView.insertSections(IndexSet(integer: self.news.count - 1), with: .top)
             }
         }
-    }
-    
-    var navigationBarAlpha:CGFloat {
-        return (tableView.contentOffset.y - 64) / 250
     }
     
     var selectedStory: Story!
@@ -61,17 +65,18 @@ extension MainViewController {
         navigationBarBackgroundImage!.alpha = navigationBarAlpha
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         switch segue.identifier! {
         case "MasterToDetail":
             guard let destinationVC = segue.destination as? DetailViewController else {
-                    fatalError()
+                fatalError()
             }
             destinationVC.story = selectedStory
             
         default: break
         }
     }
+    
 }
 
 
@@ -80,7 +85,7 @@ extension MainViewController {
 
 extension MainViewController {
     
-    private func setupNavigationBar() {
+    func setupNavigationBar() {
         let bar = navigationController?.navigationBar
         
         bar?.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
@@ -90,7 +95,7 @@ extension MainViewController {
         bar?.barTintColor = Theme.mainColor
     }
     
-    private func setupTableView() {
+    func setupTableView() {
         tableView.rowHeight = 101
         tableView.estimatedRowHeight = 101
         tableView.contentInset.top = -64
@@ -103,7 +108,7 @@ extension MainViewController {
         tableView.dataSource = self
     }
     
-    private func setupImageBanner() {
+    func setupImageBanner() {
         imageBanner.delegate = self
     }
 }
@@ -113,8 +118,8 @@ extension MainViewController {
 // MARK: - Configure
 
 extension MainViewController {
-
-    private func configureImageBanner() {
+    
+    func configureImageBanner() {
         imageBanner.models = topStories.map {
             (story) -> ModelBannerCanPresent in
             return story as ModelBannerCanPresent
@@ -136,14 +141,14 @@ extension MainViewController: URLSessionTaskDelegate, URLSessionDelegate {
         getNews(from: news.last!.previousNewsURL)
     }
     
-    // <[Private]> Implementaion
-    private func getNews(from newsURL: URL) {
+    // <[]> Implementaion
+    func getNews(from newsURL: URL) {
         request(newsURL, withMethod: .get).responseJSON {
             (response) in
             switch response.result {
             case .success(let json):
                 do {
-                    let news = try News.decode(json: json)
+                    let news = try News.decode(json: json as AnyObject)
                     self.news.append(news)
                     if self.news.count == 1 {
                         self.updateTopStories()
@@ -159,7 +164,7 @@ extension MainViewController: URLSessionTaskDelegate, URLSessionDelegate {
         }
     }
     
-    private func updateTopStories() {
+    func updateTopStories() {
         topStories = news[0].topStories!.map({ (story) -> ModelBannerCanPresent in
             return story as ModelBannerCanPresent
         })
@@ -275,5 +280,5 @@ extension MainViewController: BannerViewDelegate {
         
         performSegue(withIdentifier: "MasterToDetail", sender: nil)
     }
-
+    
 }

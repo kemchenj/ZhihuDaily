@@ -1,9 +1,9 @@
 # 知乎日报
-> **平台:** iOS 10, Xcode 8.0(beta 5)
+> **平台:** iOS 10, Xcode 8.0(beta 6)
 >
-> **语言:** Swift 3.0(beta 5)
+> **语言:** Swift 3.0(beta 6)
 >
-> **第三方库:** Alamofire, AlamofireImage
+> **第三方库:** Alamofire, Kingfisher
 
 ![Demo Preview](Demo Preview.gif)
 
@@ -26,9 +26,8 @@
     - [x] 点击进入对应文章
     - [x] 无限左右滑动
 - [x] 下拉导航栏标题跟随改动
+- [x] 无限下拉, 自动加载内容
 - [ ] 下拉刷新
-- [ ] 汉堡菜单
-    - [ ] 专题日报
 
 ### 文章详情页
 - [x] 顶部大图

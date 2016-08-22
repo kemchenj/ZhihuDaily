@@ -24,7 +24,7 @@ struct Story {
         return URL(string: thumbNailURLString.replacingOccurrences(of: "http", with: "https"))!
     }
     
-    private init(id: Int, title: String, thumbNailURL: String) {
+     init(id: Int, title: String, thumbNailURL: String) {
         self.id = id
         self.title = title
         self.thumbNailURLString = thumbNailURL

@@ -1,6 +1,6 @@
 {
   "name": "Alamofire",
-  "version": "3.4.1",
+  "version": "4.0.0",
   "license": "MIT",
   "summary": "Elegant HTTP Networking in Swift",
   "homepage": "https://github.com/Alamofire/Alamofire",
@@ -10,11 +10,11 @@
   },
   "source": {
     "git": "https://github.com/Alamofire/Alamofire.git",
-    "tag": "3.4.1"
+    "tag": "4.0.0"
   },
   "platforms": {
-    "ios": "8.0",
-    "osx": "10.9",
+    "ios": "9.0",
+    "osx": "10.11",
     "tvos": "9.0",
     "watchos": "2.0"
   },

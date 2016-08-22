@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import Kingfisher
+
 
 class BannerContentView: UIView {
 
@@ -14,38 +16,41 @@ class BannerContentView: UIView {
     var label = UILabel()
     var labelMargin: CGFloat = 8
     
-    private var model: ModelBannerCanPresent!
+     var model: ModelBannerCanPresent!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-                
-        imageView.clipsToBounds = true
-        imageView.contentMode = .scaleAspectFill
-        imageView.frame = frame
-        imageView.drawLinearGradient(startColor: UIColor.black,
-                           endColor: UIColor.clear,
-                           startPoint: CGPoint(x: 0,
-                                               y: 0),
-                           endPoint: CGPoint(x: 0,
-                                             y: 1))
-        
-        label.font = UIFont.boldSystemFont(ofSize: 22)
-        label.textColor = UIColor.white
-        label.numberOfLines = 0
-        label.lineBreakMode = .byWordWrapping
-        
-        addSubview(imageView)
-        addSubview(label)
+
+        setupImageView()
+        setupLabel()
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
     
+     func setupImageView() {
+        imageView.clipsToBounds = true
+        imageView.contentMode = .scaleAspectFill
+        imageView.frame = frame
+
+        addSubview(imageView)
+    }
+    
+     func setupLabel() {
+        label.font = UIFont.boldSystemFont(ofSize: 22)
+        label.textColor = UIColor.white
+        label.numberOfLines = 0
+        label.lineBreakMode = .byWordWrapping
+        
+        addSubview(label)
+    }
+
     func configureModel(model: ModelBannerCanPresent) {
         self.model = model
         
-        imageView.af_setImageWithURL(model.bannerImageURL!)
+        let resource = ImageResource(downloadURL: model.bannerImageURL!)
+        imageView.kf_setImage(with: resource)
         
         let height = model.bannerTitle.getHeight(givenWidth: UIScreen.main.bounds.width - labelMargin * 2,
                                                  font: label.font)

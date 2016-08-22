@@ -47,7 +47,7 @@ extension UIView {
         let colors = [startColor.cgColor, endColor.cgColor]
         let colorSpace = CGColorSpaceCreateDeviceRGB()
         let colorLocations: [CGFloat] = [0, 1]
-        let gradient = CGGradient(colorsSpace: colorSpace, colors: colors, locations: colorLocations)
+        let gradient = CGGradient(colorsSpace: colorSpace, colors: colors as CFArray, locations: colorLocations)
 
         let context = UIGraphicsGetCurrentContext()
         context?.drawLinearGradient(gradient!,
@@ -90,19 +90,19 @@ extension CAMediaTimingFunction {
 extension UIViewControllerContextTransitioning {
     
     var fromViewController: UIViewController? {
-        return viewController(forKey: UITransitionContextFromViewControllerKey)
+        return viewController(forKey: UITransitionContextViewControllerKey.from)
     }
 
     var fromView: UIView? {
-        return view(forKey: UITransitionContextFromViewKey)
+        return view(forKey: UITransitionContextViewKey.from)
     }
 
     var toViewController: UIViewController? {
-        return viewController(forKey: UITransitionContextToViewControllerKey)
+        return viewController(forKey: UITransitionContextViewControllerKey.to)
     }
 
     var toView: UIView? {
-        return view(forKey: UITransitionContextToViewKey)
+        return view(forKey: UITransitionContextViewKey.to)
     }
 
 }

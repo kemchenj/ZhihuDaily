@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 @IBDesignable
 class StoryCell: UITableViewCell {
@@ -17,7 +18,10 @@ class StoryCell: UITableViewCell {
     var story: Story! {
         didSet {
             self.titleLabel.text = story.title
-            self.thumbNail.af_setImageWithURL(story.thumbNailURL)
+            // self.thumbNail.af_setImageWithURL(story.thumbNailURL)
+            
+            let resource = ImageResource(downloadURL: story.thumbNailURL)
+            self.thumbNail.kf_setImage(with: resource)
         }
     }
     

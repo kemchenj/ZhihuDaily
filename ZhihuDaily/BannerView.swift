@@ -32,14 +32,10 @@ class BannerView: UIView {
     
     var delegate: BannerViewDelegate?
     
-    private var collectionView: UICollectionView!
-    private var pageControl: UIPageControl!
+     var collectionView: UICollectionView!
+     var pageControl: UIPageControl!
     
-    private var pageAmount: Int {
-        return models.count
-    }
-    
-    private var currentPage: Int {
+    var currentPage: Int {
         var currentPage: Int
         let realPage = Int(collectionView.contentOffset.x / UIScreen.main.bounds.width + 0.5)
         
@@ -54,7 +50,6 @@ class BannerView: UIView {
         return currentPage
     }
     
-    private var banners = [(label: UILabel, imageView: UIImageView)]()
     var models = [ModelBannerCanPresent]() {
         didSet {
             collectionView.contentOffset.x = UIScreen.main.bounds.width
@@ -87,7 +82,7 @@ class BannerView: UIView {
 
 extension BannerView {
     
-    private func setupCollectionView() {
+    func setupCollectionView() {
         // 初始化
         let layout = UICollectionViewFlowLayout()
         collectionView = UICollectionView(frame: frame, collectionViewLayout: layout)
@@ -119,7 +114,7 @@ extension BannerView {
         addSubview(collectionView)
     }
     
-    private func setupPageControl() {
+     func setupPageControl() {
         pageControl = UIPageControl(frame: CGRect(x: 0,
                                                   y: frame.height - 37,
                                                   width: UIScreen.main.bounds.width,

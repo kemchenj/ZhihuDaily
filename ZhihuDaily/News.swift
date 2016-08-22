@@ -56,14 +56,14 @@ extension News: DecodeableModel {
         var topStories: [Story]?
         if let topStoryDicts = json["top_stories"] as? [[String: AnyObject]] {
             topStories = try topStoryDicts.map { (json) -> Story in
-                return try Story.decode(json: json)
+                return try Story.decode(json: json as AnyObject)
             }
         }
         
         
         // Handle Stories
         let stories = try storyDicts.map { (json) -> Story in
-            return try Story.decode(json: json)
+            return try Story.decode(json: json as AnyObject)
         }
         
         return News(dateString: dateString,

@@ -8,13 +8,15 @@
 
 import UIKit
 import Alamofire
-import AlamofireImage
+import Kingfisher
 
 
 
 class DetailViewController: UIViewController {
     
-    var imageViewHeight: CGFloat = 264
+    var imageViewHeight: CGFloat {
+        return 200
+    }
     
     @IBOutlet weak var webView: UIWebView!
     @IBOutlet weak var toolBar: UIToolbar!
@@ -66,20 +68,20 @@ extension DetailViewController {
 
 // MARK: - Setup
 
-extension DetailViewController {
+fileprivate extension DetailViewController {
     
-    private func setupWebView() {
+    func setupWebView() {
         webView.backgroundColor = UIColor.white
         
         webScrollView.addSubview(imageView)
         webScrollView.clipsToBounds = false
         webScrollView.delegate = self
-
+        
         webScrollView.contentInset.top = -64
         webScrollView.scrollIndicatorInsets.top = -64
     }
     
-    private func setupBanner() {
+    func setupBanner() {
         imageView = UIImageView(frame: CGRect(x: 0,
                                               y: 0,
                                               width: UIScreen.main.bounds.width,
@@ -87,13 +89,6 @@ extension DetailViewController {
         
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
-        
-        imageView.drawLinearGradient(startColor: UIColor.black,
-                                     endColor: UIColor.clear,
-                                     startPoint: CGPoint(x: 0,
-                                                         y: 0),
-                                     endPoint: CGPoint(x: 0,
-                                                       y: 1))
     }
 }
 
@@ -103,18 +98,20 @@ extension DetailViewController {
 
 extension DetailViewController {
     
-    private func requestContent() {
+    func requestContent() {
         request(story.storyURL, withMethod: .get).responseJSON { (response) in
             switch response.result {
-            case .success(let json):
+            case .success(let json as [String: AnyObject]):
                 // 验证数据合理性
-                guard let imageURL = json["image"] as? String,
+                guard let image = json["image"] as? String,
+                      let imageURL = URL(string: image.replacingOccurrences(of: "http", with: "https")),
                       let body = json["body"] as? String,
                       let css = json["css"] as? [String] else {
                         return
                 }
                 
-                self.imageView.af_setImageWithURL(URL(string: imageURL.replacingOccurrences(of: "http", with: "https"))!)
+                let resource = ImageResource(downloadURL: imageURL)
+                self.imageView.kf_setImage(with: resource)
                 
                 let html = self.concatHTML(css: css, body: body)
                 OperationQueue.main.addOperation {
@@ -124,11 +121,18 @@ extension DetailViewController {
             case .failure(let error):
                 // Do some exception handle
                 fatalError("\(error)")
+                
+            default: break
             }
         }
     }
     
-    // 拼接HTML
+    /// 拼接 HTML
+    ///
+    /// - parameter css:  css 数组
+    /// - parameter body: HTML Body
+    ///
+    /// - returns: 拼接好的 HTML
     private func concatHTML(css: [String], body: String) -> String {
         var html = "<html>"
         

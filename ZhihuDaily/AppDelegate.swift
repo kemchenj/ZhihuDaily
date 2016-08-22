@@ -8,14 +8,13 @@
 
 import UIKit
 import Alamofire
-import AlamofireImage
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var window: UIWindow?
     
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
         
         UINavigationBar.appearance().tintColor = UIColor.white
         
@@ -28,7 +27,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         return true
     }
-
+    
 }
 
 
@@ -38,7 +37,8 @@ extension AppDelegate {
     
     func setupLaunchImage() {
         // 启动页
-        if let data = UserDefaults.standard.value(forKey: "LaunchImage") as? Data, let image = UIImage(data: data) {
+        if let data = UserDefaults.standard.value(forKey: "LaunchImage") as? Data,
+            let image = UIImage(data: data) {
             
             let splashView = UIImageView(frame: UIScreen.main.bounds)
             // splashView.alpha = 0
@@ -52,13 +52,14 @@ extension AppDelegate {
                 delay: 0,
                 options: [.curveEaseOut],
                 animations: {
-                    splashView.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
+                    splashView.transform = CGAffineTransform(scaleX: 1.15, y: 1.15)
                     splashView.alpha = 1
                 },
                 completion: { (_) in
                     splashView.removeFromSuperview()
             })
         }
+        
         downloadNewImage()
     }
     
@@ -67,25 +68,27 @@ extension AppDelegate {
         
         request(url, withMethod: .get).responseJSON { (response) in
             switch response.result {
-            case .success(let json):
+            case .success(let json as [String: AnyObject]):
                 guard let imgURLString = json["img"] as? String,
                     let imgURL = URL(string: imgURLString) else {
                         fatalError()
                 }
                 
-                request(imgURL, withMethod: .get).responseData(completionHandler: { (response) in
+                request(imgURL, withMethod: .get).responseData { (response) in
                     switch response.result {
                     case .success(let data):
                         UserDefaults.standard.set(data, forKey: "LaunchImage")
-                        
+                
                     case .failure(let error):
                         print(error)
                         fatalError("   ")
                     }
-                })
+                }
                 
             case .failure(let error):
                 print(error)
+                
+            default: break
             }
         }
     }
