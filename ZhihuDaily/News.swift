@@ -45,25 +45,30 @@ extension News {
 }
 
 // MARK: - JSON转模型
-extension News: DecodeableModel {
+extension News: JSONParsable {
     
-    static func decode(json: AnyObject) throws -> News {
-        guard let dateString = json["date"] as? String,
-            let storyDicts = json["stories"] as? [[String: AnyObject]] else {
-                throw DecodeError.invalidContent
+    static func parse(json: AnyObject) throws -> News {
+        guard let dateString = json["date"] as? String else {
+            let message = "Expected date String"
+            throw ParseError.missingAttribute(message: message)
+        }
+        
+        guard let storyDicts = json["stories"] as? [[String: AnyObject]] else {
+            let message = "Expected stories String"
+            throw ParseError.missingAttribute(message: message)
         }
         
         var topStories: [Story]?
         if let topStoryDicts = json["top_stories"] as? [[String: AnyObject]] {
             topStories = try topStoryDicts.map { (json) -> Story in
-                return try Story.decode(json: json as AnyObject)
+                return try Story.parse(json: json as AnyObject)
             }
         }
         
         
         // Handle Stories
         let stories = try storyDicts.map { (json) -> Story in
-            return try Story.decode(json: json as AnyObject)
+            return try Story.parse(json: json as AnyObject)
         }
         
         return News(dateString: dateString,

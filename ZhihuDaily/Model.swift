@@ -8,12 +8,11 @@
 
 import Foundation
 
-enum DecodeError: Error {
-    case invalidJSON
-    case invalidContent
+enum ParseError: Error {
+    case missingAttribute(message: String)
 }
 
 // Model需要有decode JSON的方法
-protocol DecodeableModel {
-    static func decode(json: AnyObject) throws -> Self
+protocol JSONParsable {
+    static func parse(json: AnyObject) throws -> Self
 }

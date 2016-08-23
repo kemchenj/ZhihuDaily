@@ -49,13 +49,22 @@ extension Story: ModelBannerCanPresent {
 }
 
 // MARK: - JSON转模型
-extension Story: DecodeableModel {
+extension Story: JSONParsable {
     
-    static func decode(json: AnyObject) throws -> Story {
-        guard let title = json["title"] as? String,
-            let id = json["id"] as? Int,
-            let thumbNailURL = (json["images"] as? [String])?.first ?? json["image"] as? String else {
-                throw DecodeError.invalidContent
+    static func parse(json: AnyObject) throws -> Story {
+        guard let title = json["title"] as? String else {
+            let message = "Expected stories String"
+            throw ParseError.missingAttribute(message: message)
+        }
+        
+        guard let id = json["id"] as? Int else {
+            let message = "Expected id Int"
+            throw ParseError.missingAttribute(message: message)
+        }
+        
+        guard let thumbNailURL = (json["images"] as? [String])?.first ?? json["image"] as? String else {
+            let message = "Expected image urlString"
+            throw ParseError.missingAttribute(message: message)
         }
         
         return Story(id: id,
