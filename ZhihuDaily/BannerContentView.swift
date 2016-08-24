@@ -11,16 +11,16 @@ import Kingfisher
 
 
 class BannerContentView: UIView {
-
+    
     var imageView = UIImageView()
     var label = UILabel()
     var labelMargin: CGFloat = 8
     
-     var model: ModelBannerCanPresent!
+    var model: ModelBannerCanPresent!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-
+        
         setupImageView()
         setupLabel()
     }
@@ -29,15 +29,15 @@ class BannerContentView: UIView {
         super.init(coder: aDecoder)
     }
     
-     func setupImageView() {
+    func setupImageView() {
         imageView.clipsToBounds = true
         imageView.contentMode = .scaleAspectFill
         imageView.frame = frame
-
+        
         addSubview(imageView)
     }
     
-     func setupLabel() {
+    func setupLabel() {
         label.font = UIFont.boldSystemFont(ofSize: 22)
         label.textColor = UIColor.white
         label.numberOfLines = 0
@@ -45,7 +45,7 @@ class BannerContentView: UIView {
         
         addSubview(label)
     }
-
+    
     func configureModel(model: ModelBannerCanPresent) {
         self.model = model
         

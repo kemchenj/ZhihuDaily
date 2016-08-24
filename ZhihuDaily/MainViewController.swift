@@ -148,7 +148,7 @@ extension MainViewController: URLSessionTaskDelegate, URLSessionDelegate {
             switch response.result {
             case .success(let json):
                 do {
-                    let news = try News.decode(json: json as AnyObject)
+                    let news = try News.parse(json: json as AnyObject)
                     self.news.append(news)
                     if self.news.count == 1 {
                         self.updateTopStories()

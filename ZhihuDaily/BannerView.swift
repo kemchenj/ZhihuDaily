@@ -32,8 +32,8 @@ class BannerView: UIView {
     
     var delegate: BannerViewDelegate?
     
-     var collectionView: UICollectionView!
-     var pageControl: UIPageControl!
+    var collectionView: UICollectionView!
+    var pageControl: UIPageControl!
     
     var currentPage: Int {
         var currentPage: Int
@@ -61,7 +61,7 @@ class BannerView: UIView {
         didSet {
             collectionView.visibleCells.forEach { (cell) in
                 let imageView = cell.contentView.subviews[0].subviews[0]
-
+                
                 imageView.frame.origin.y = min(offsetY, 0)
                 imageView.frame.size.height = max(frame.height - offsetY, frame.height)
             }
@@ -114,7 +114,7 @@ extension BannerView {
         addSubview(collectionView)
     }
     
-     func setupPageControl() {
+    func setupPageControl() {
         pageControl = UIPageControl(frame: CGRect(x: 0,
                                                   y: frame.height - 37,
                                                   width: UIScreen.main.bounds.width,
