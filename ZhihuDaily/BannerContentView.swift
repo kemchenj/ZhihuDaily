@@ -28,6 +28,14 @@ class BannerContentView: UIView {
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
+
+}
+
+
+
+// MARK: - Setup
+
+extension BannerContentView {
     
     func setupImageView() {
         imageView.clipsToBounds = true
@@ -38,7 +46,7 @@ class BannerContentView: UIView {
     }
     
     func setupLabel() {
-        label.font = UIFont.boldSystemFont(ofSize: 22)
+        label.font = UIFont.boldSystemFont(ofSize: 20)
         label.textColor = UIColor.white
         label.numberOfLines = 0
         label.lineBreakMode = .byWordWrapping
@@ -46,6 +54,14 @@ class BannerContentView: UIView {
         addSubview(label)
     }
     
+}
+
+
+
+// MARK: - Configure
+
+extension BannerContentView {
+
     func configureModel(model: ModelBannerCanPresent) {
         self.model = model
         

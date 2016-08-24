@@ -60,10 +60,17 @@ class BannerView: UIView {
     var offsetY: CGFloat = 0 {
         didSet {
             collectionView.visibleCells.forEach { (cell) in
-                let imageView = cell.contentView.subviews[0].subviews[0]
+                guard let contentView = cell.contentView.subviews[0] as? BannerContentView else { fatalError()
+                }
+                
+                let imageView = contentView.imageView
                 
                 imageView.frame.origin.y = min(offsetY, 0)
                 imageView.frame.size.height = max(frame.height - offsetY, frame.height)
+                
+                let label = contentView.label
+                
+                label.alpha = 1.2 - offsetY / label.frame.height
             }
         }
     }
