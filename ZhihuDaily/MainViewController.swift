@@ -8,7 +8,6 @@
 
 import UIKit
 import Alamofire
-// import AlamofireImage
 
 
 
@@ -41,6 +40,8 @@ class MainViewController: UITableViewController {
     }
     
     var selectedStory: Story!
+    
+    var didSelectStory: (Story) -> () = { _ in }
 }
 
 
@@ -77,6 +78,10 @@ extension MainViewController {
         }
     }
     
+    @IBAction func didSelectRow(sender: AnyObject) {
+        print(sender)
+        print(sender)
+    }
 }
 
 
@@ -90,9 +95,18 @@ extension MainViewController {
         
         bar?.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
         bar?.shadowImage = UIImage()
-        bar?.setBackgroundImage(UIImage(), for: .default)
         bar?.isTranslucent = false
         bar?.barTintColor = Theme.mainColor
+        
+        let gradient = CAGradientLayer()
+        gradient.colors = [
+            UIColor.black.cgColor,
+            UIColor.clear.cgColor
+        ]
+        gradient.startPoint = .zero
+        gradient.endPoint = CGPoint(x: 0, y: 1)
+        
+        bar?.layer.addSublayer(gradient)
     }
     
     func setupTableView() {
@@ -224,10 +238,8 @@ extension MainViewController {
     
     // Row
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let cell = tableView.cellForRow(at: indexPath) as? StoryCell
-        selectedStory = cell?.story
-        
-        performSegue(withIdentifier: "MasterToDetail", sender: nil)
+        let cell = tableView.cellForRow(at: indexPath) as! StoryCell
+        didSelect(cell.story)
     }
     
     override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {

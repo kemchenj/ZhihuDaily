@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11198.2" systemVersion="15G31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="Yo5-lv-KuT">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11198.2" systemVersion="16A303a" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="Yo5-lv-KuT">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
@@ -9,7 +9,7 @@
         <!--首页-->
         <scene sceneID="ekC-xw-39d">
             <objects>
-                <tableViewController id="nit-XF-QkW" customClass="MainViewController" customModule="ZhihuDaily" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="Master" useStoryboardIdentifierAsRestorationIdentifier="YES" id="nit-XF-QkW" customClass="MainViewController" customModule="ZhihuDaily" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="XPZ-vE-XgF">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -73,20 +73,11 @@
                     <navigationItem key="navigationItem" title="首页" id="ebw-2X-i3f"/>
                     <connections>
                         <outlet property="imageBanner" destination="Tlz-rN-oLy" id="8cc-Fh-2QZ"/>
-                        <segue destination="YY1-O2-4r2" kind="show" identifier="MasterToDetail" id="Esv-dS-Hkh"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="IVb-Q8-7Oq" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="504.80000000000001" y="102.99850074962519"/>
-        </scene>
-        <!--DetailViewController-->
-        <scene sceneID="7gV-oN-7YA">
-            <objects>
-                <viewControllerPlaceholder storyboardName="DetailViewController" id="YY1-O2-4r2" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="9LQ-Go-VrQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1235" y="103"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="vcX-Du-Kh1">

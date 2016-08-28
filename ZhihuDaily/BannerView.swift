@@ -70,7 +70,7 @@ class BannerView: UIView {
                 
                 let label = contentView.label
                 
-                label.alpha = 1.2 - offsetY / label.frame.height
+                label.alpha = 1.6 - offsetY / label.frame.height
             }
         }
     }
@@ -100,12 +100,6 @@ extension BannerView {
         collectionView.showsVerticalScrollIndicator = false
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.clipsToBounds = false
-        collectionView.drawLinearGradient(startColor: UIColor.black,
-                                          endColor: UIColor.white,
-                                          startPoint: CGPoint(x: 0.5,
-                                                              y: 0),
-                                          endPoint: CGPoint(x: 0.5,
-                                                            y: 1))
         
         collectionView.dataSource = self
         collectionView.delegate = self

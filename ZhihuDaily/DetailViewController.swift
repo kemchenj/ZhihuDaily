@@ -127,12 +127,7 @@ extension DetailViewController {
         }
     }
     
-    /// 拼接 HTML
-    ///
-    /// - parameter css:  css 数组
-    /// - parameter body: HTML Body
-    ///
-    /// - returns: 拼接好的 HTML
+    // 拼接 HTML
     private func concatHTML(css: [String], body: String) -> String {
         var html = "<html>"
         

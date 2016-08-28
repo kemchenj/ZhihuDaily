@@ -13,6 +13,7 @@ import Alamofire
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var window: UIWindow?
+    var app: App?
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
         
@@ -22,6 +23,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let mainVC = UIStoryboard.init(name: "Main", bundle: nil).instantiateInitialViewController()
         window?.rootViewController = mainVC
         window?.makeKeyAndVisible()
+        
+        if let window = window {
+            app = App(window: window)
+        }
         
         setupLaunchImage()
         
