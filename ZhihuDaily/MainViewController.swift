@@ -25,7 +25,7 @@ class MainViewController: UITableViewController {
         return (tableView.contentOffset.y - 64) / bannerHeight
     }
     
-    var topStories = [ModelBannerCanPresent]() {
+    var topStories = [BannerDataSource]() {
         didSet {
             imageBanner.models = topStories
         }
@@ -107,9 +107,8 @@ extension MainViewController {
 extension MainViewController {
     
     func configureImageBanner() {
-        imageBanner.models = topStories.map {
-            (story) -> ModelBannerCanPresent in
-            return story as ModelBannerCanPresent
+        imageBanner.models = topStories.map { (story) -> BannerDataSource in
+            return story as BannerDataSource
         }
     }
 }
@@ -153,8 +152,8 @@ extension MainViewController: URLSessionTaskDelegate, URLSessionDelegate {
     }
     
     func updateTopStories() {
-        topStories = news[0].topStories!.map({ (story) -> ModelBannerCanPresent in
-            return story as ModelBannerCanPresent
+        topStories = news[0].topStories!.map({ (story) -> BannerDataSource in
+            return story as BannerDataSource
         })
     }
 }
@@ -257,7 +256,7 @@ extension MainViewController {
 
 extension MainViewController: BannerViewDelegate {
     
-    func tapBanner(model: ModelBannerCanPresent) {
+    func tapBanner(model: BannerDataSource) {
         guard let story = model as? Story else { fatalError() }
         didSelectStory(story)
     }

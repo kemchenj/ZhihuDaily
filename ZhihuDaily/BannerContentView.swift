@@ -16,7 +16,7 @@ class BannerContentView: UIView {
     var label = UILabel()
     var labelMargin: CGFloat = 8
     
-    var model: ModelBannerCanPresent!
+    var dataSource: BannerDataSource!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -62,8 +62,8 @@ extension BannerContentView {
 
 extension BannerContentView {
 
-    func configureModel(model: ModelBannerCanPresent) {
-        self.model = model
+    func configureModel(model: BannerDataSource) {
+        self.dataSource = model
         
         let resource = ImageResource(downloadURL: model.bannerImageURL!)
         imageView.kf_setImage(with: resource)

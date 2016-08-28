@@ -32,8 +32,10 @@ struct Story {
     
 }
 
+
+
 // MARK: - 给BannerView展示用的数据
-extension Story: ModelBannerCanPresent {
+extension Story: BannerDataSource {
     
     var bannerTitle: String {
         return title
@@ -47,6 +49,8 @@ extension Story: ModelBannerCanPresent {
         return nil
     }
 }
+
+
 
 // MARK: - JSON转模型
 extension Story: JSONParsable {

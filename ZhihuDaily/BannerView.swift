@@ -11,7 +11,7 @@ import UIKit
 
 
 // 给Model用的协议，符合这一个协议的Model都可以被BannerView展示
-protocol ModelBannerCanPresent {
+protocol BannerDataSource {
     
     var bannerTitle: String { get }
     
@@ -23,7 +23,7 @@ protocol ModelBannerCanPresent {
 
 // 代理
 protocol BannerViewDelegate {
-    func tapBanner(model: ModelBannerCanPresent)
+    func tapBanner(model: BannerDataSource)
 }
 
 
@@ -50,7 +50,7 @@ class BannerView: UIView {
         return currentPage
     }
     
-    var models = [ModelBannerCanPresent]() {
+    var models = [BannerDataSource]() {
         didSet {
             collectionView.contentOffset.x = UIScreen.main.bounds.width
             collectionView.reloadData()
