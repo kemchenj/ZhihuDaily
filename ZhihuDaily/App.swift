@@ -6,7 +6,7 @@
 //  Copyright © 2016 kemchenj. All rights reserved.
 //
 
-// MARK: - 处理 VC 间跳转逻辑, 解开 VC 的耦合
+// MARK: - 处理 VC 间跳转逻辑, 定义 VC 的用户交互行为会触发的事件, 解开 VC 间耦合
 
 import UIKit
 

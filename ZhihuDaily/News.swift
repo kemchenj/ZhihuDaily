@@ -47,28 +47,28 @@ extension News {
 // MARK: - JSON转模型
 extension News: JSONParsable {
     
-    static func parse(json: AnyObject) throws -> News {
+    static func parse(json: JSONDictionary) throws -> News {
         guard let dateString = json["date"] as? String else {
             let message = "Expected date String"
             throw ParseError.missingAttribute(message: message)
         }
         
-        guard let storyDicts = json["stories"] as? [[String: AnyObject]] else {
+        guard let storyDicts = json["stories"] as? [JSONDictionary] else {
             let message = "Expected stories String"
             throw ParseError.missingAttribute(message: message)
         }
         
         var topStories: [Story]?
-        if let topStoryDicts = json["top_stories"] as? [[String: AnyObject]] {
+        if let topStoryDicts = json["top_stories"] as? [JSONDictionary] {
             topStories = try topStoryDicts.map { (json) -> Story in
-                return try Story.parse(json: json as AnyObject)
+                return try Story.parse(json: json)
             }
         }
         
         
         // Handle Stories
         let stories = try storyDicts.map { (json) -> Story in
-            return try Story.parse(json: json as AnyObject)
+            return try Story.parse(json: json)
         }
         
         return News(dateString: dateString,

@@ -51,20 +51,17 @@ extension Story: ModelBannerCanPresent {
 // MARK: - JSON转模型
 extension Story: JSONParsable {
     
-    static func parse(json: AnyObject) throws -> Story {
+    static func parse(json: JSONDictionary) throws -> Story {
         guard let title = json["title"] as? String else {
-            let message = "Expected stories String"
-            throw ParseError.missingAttribute(message: message)
+            throw ParseError.missingAttribute(message: "Expected stories String")
         }
         
         guard let id = json["id"] as? Int else {
-            let message = "Expected id Int"
-            throw ParseError.missingAttribute(message: message)
+            throw ParseError.missingAttribute(message: "Expected id Int")
         }
         
         guard let thumbNailURL = (json["images"] as? [String])?.first ?? json["image"] as? String else {
-            let message = "Expected image urlString"
-            throw ParseError.missingAttribute(message: message)
+            throw ParseError.missingAttribute(message: "Expected image urlString")
         }
         
         return Story(id: id,

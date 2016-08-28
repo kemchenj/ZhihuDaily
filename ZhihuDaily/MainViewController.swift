@@ -39,8 +39,6 @@ class MainViewController: UITableViewController {
         }
     }
     
-    var selectedStory: Story!
-    
     var didSelectStory: (Story) -> () = { _ in }
 }
 
@@ -65,23 +63,7 @@ extension MainViewController {
         
         navigationBarBackgroundImage!.alpha = navigationBarAlpha
     }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        switch segue.identifier! {
-        case "MasterToDetail":
-            guard let destinationVC = segue.destination as? DetailViewController else {
-                fatalError()
-            }
-            destinationVC.story = selectedStory
-            
-        default: break
-        }
-    }
-    
-    @IBAction func didSelectRow(sender: AnyObject) {
-        print(sender)
-        print(sender)
-    }
+
 }
 
 
@@ -97,16 +79,6 @@ extension MainViewController {
         bar?.shadowImage = UIImage()
         bar?.isTranslucent = false
         bar?.barTintColor = Theme.mainColor
-        
-        let gradient = CAGradientLayer()
-        gradient.colors = [
-            UIColor.black.cgColor,
-            UIColor.clear.cgColor
-        ]
-        gradient.startPoint = .zero
-        gradient.endPoint = CGPoint(x: 0, y: 1)
-        
-        bar?.layer.addSublayer(gradient)
     }
     
     func setupTableView() {
@@ -162,7 +134,8 @@ extension MainViewController: URLSessionTaskDelegate, URLSessionDelegate {
             switch response.result {
             case .success(let json):
                 do {
-                    let news = try News.parse(json: json as AnyObject)
+                    guard let json = json as? JSONDictionary else { return }
+                    let news = try News.parse(json: json)
                     self.news.append(news)
                     if self.news.count == 1 {
                         self.updateTopStories()
@@ -239,7 +212,7 @@ extension MainViewController {
     // Row
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let cell = tableView.cellForRow(at: indexPath) as! StoryCell
-        didSelect(cell.story)
+        didSelectStory(cell.story)
     }
     
     override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -284,13 +257,8 @@ extension MainViewController {
 extension MainViewController: BannerViewDelegate {
     
     func tapBanner(model: ModelBannerCanPresent) {
-        guard let story = model as? Story else {
-            fatalError()
-        }
-        
-        selectedStory = story
-        
-        performSegue(withIdentifier: "MasterToDetail", sender: nil)
+        guard let story = model as? Story else { fatalError() }
+        didSelectStory(story)
     }
     
 }
