@@ -85,6 +85,7 @@ extension MainViewController {
         tableView.rowHeight = 101
         tableView.estimatedRowHeight = 101
         tableView.contentInset.top = -64
+        tableView.scrollIndicatorInsets.top = tableView.contentInset.top
         tableView.clipsToBounds = false
         tableView.backgroundColor = UIColor.white
         
