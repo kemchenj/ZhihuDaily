@@ -14,5 +14,5 @@ struct Theme {
                                     green: 179/255,
                                     blue: 245/255,
                                     alpha: 1)
-    
+    static let white = UIColor.white
 }

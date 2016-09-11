@@ -8,7 +8,7 @@
 
 import UIKit
 import Alamofire
-import Kingfisher
+import AlamofireImage
 
 
 
@@ -71,7 +71,7 @@ extension DetailViewController {
 fileprivate extension DetailViewController {
     
     func setupWebView() {
-        webView.backgroundColor = UIColor.white
+        webView.backgroundColor = Theme.white
         
         webScrollView.addSubview(imageView)
         webScrollView.clipsToBounds = false
@@ -99,7 +99,7 @@ fileprivate extension DetailViewController {
 extension DetailViewController {
     
     func requestContent() {
-        request(story.storyURL, withMethod: .get).responseJSON { (response) in
+        request(story.storyURL, method: .get).responseJSON { (response) in
             switch response.result {
             case .success(let json as [String: AnyObject]):
                 // 验证数据合理性
@@ -110,9 +110,9 @@ extension DetailViewController {
                         return
                 }
                 
-                let resource = ImageResource(downloadURL: imageURL)
-                self.imageView.kf_setImage(with: resource)
+                self.imageView.af_setImage(withURL: imageURL)
                 
+                // 拼接 html 然后显示出来
                 let html = self.concatHTML(css: css, body: body)
                 OperationQueue.main.addOperation {
                     self.webView.loadHTMLString(html, baseURL: nil)

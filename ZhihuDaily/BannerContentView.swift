@@ -7,7 +7,8 @@
 //
 
 import UIKit
-import Kingfisher
+//import Kingfisher
+import AlamofireImage
 
 
 class BannerContentView: UIView {
@@ -47,7 +48,7 @@ extension BannerContentView {
     
     func setupLabel() {
         label.font = UIFont.boldSystemFont(ofSize: 20)
-        label.textColor = UIColor.white
+        label.textColor = Theme.white
         label.numberOfLines = 0
         label.lineBreakMode = .byWordWrapping
         
@@ -65,8 +66,7 @@ extension BannerContentView {
     func configureModel(model: BannerDataSource) {
         self.dataSource = model
         
-        let resource = ImageResource(downloadURL: model.bannerImageURL!)
-        imageView.kf_setImage(with: resource)
+        imageView.af_setImage(withURL: model.bannerImageURL!)
         
         let height = model.bannerTitle.getHeight(givenWidth: UIScreen.main.bounds.width - labelMargin * 2,
                                                  font: label.font)

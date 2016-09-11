@@ -11,6 +11,8 @@ import Alamofire
 
 
 
+// MARK: - Class
+
 class MainViewController: UITableViewController {
     
     var bannerHeight: CGFloat = 200
@@ -63,7 +65,7 @@ extension MainViewController {
         
         navigationBarBackgroundImage!.alpha = navigationBarAlpha
     }
-
+    
 }
 
 
@@ -72,22 +74,22 @@ extension MainViewController {
 
 extension MainViewController {
     
-    func setupNavigationBar() {
+    fileprivate func setupNavigationBar() {
         let bar = navigationController?.navigationBar
         
-        bar?.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
+        bar?.titleTextAttributes = [NSForegroundColorAttributeName: Theme.white]
         bar?.shadowImage = UIImage()
         bar?.isTranslucent = false
         bar?.barTintColor = Theme.mainColor
     }
     
-    func setupTableView() {
+    fileprivate func setupTableView() {
         tableView.rowHeight = 101
         tableView.estimatedRowHeight = 101
         tableView.contentInset.top = -64
         tableView.scrollIndicatorInsets.top = tableView.contentInset.top
         tableView.clipsToBounds = false
-        tableView.backgroundColor = UIColor.white
+        tableView.backgroundColor = Theme.white
         
         tableView.register(UITableViewHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: "header")
         
@@ -95,7 +97,7 @@ extension MainViewController {
         tableView.dataSource = self
     }
     
-    func setupImageBanner() {
+    fileprivate func setupImageBanner() {
         imageBanner.delegate = self
     }
 }
@@ -119,17 +121,18 @@ extension MainViewController {
 
 extension MainViewController: URLSessionTaskDelegate, URLSessionDelegate {
     
-    func loadLatestNews() {
+    // MARK: Interface
+    fileprivate func loadLatestNews() {
         getNews(from: News.latestNewsURL)
     }
     
-    func loadPreviousNews() {
+    fileprivate func loadPreviousNews() {
         getNews(from: news.last!.previousNewsURL)
     }
     
-    // <[]> Implementaion
-    func getNews(from newsURL: URL) {
-        request(newsURL, withMethod: .get).responseJSON {
+    // MARK: Implementaion
+    private func getNews(from newsURL: URL) {
+        request(newsURL, method: .get).responseJSON {
             (response) in
             switch response.result {
             case .success(let json):
@@ -151,7 +154,7 @@ extension MainViewController: URLSessionTaskDelegate, URLSessionDelegate {
         }
     }
     
-    func updateTopStories() {
+    private func updateTopStories() {
         topStories = news[0].topStories!.map({ (story) -> BannerDataSource in
             return story as BannerDataSource
         })
@@ -160,12 +163,11 @@ extension MainViewController: URLSessionTaskDelegate, URLSessionDelegate {
 
 
 
-// MARK: - Table View Delegate/DataSource
-
-// MARK: - Data Source
+// MARK: - Table View
 
 extension MainViewController {
     
+    // MARK: Data Source
     override func numberOfSections(in tableView: UITableView) -> Int {
         return news.count
     }
@@ -182,18 +184,15 @@ extension MainViewController {
         
         return cell!
     }
-}
-
-// MARK: - Delegate
-
-extension MainViewController {
     
+    
+    // MARK: Delegate
     // Header
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: "header")
         
         header?.textLabel?.text = news[section].beautifulDate
-        header?.textLabel?.textColor = UIColor.white
+        header?.textLabel?.textColor = Theme.white
         header?.textLabel?.font = UIFont.boldSystemFont(ofSize: 14)
         
         header?.layer.backgroundColor = Theme.mainColor.cgColor
@@ -240,7 +239,7 @@ extension MainViewController {
         }
     }
     
-    // Scroll
+    // MARK: Scroll
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
         navigationBarBackgroundImage!.alpha = navigationBarAlpha
         

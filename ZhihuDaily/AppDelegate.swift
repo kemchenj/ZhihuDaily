@@ -8,6 +8,7 @@
 
 import UIKit
 import Alamofire
+import AlamofireNetworkActivityIndicator
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -17,7 +18,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
         
-        UINavigationBar.appearance().tintColor = UIColor.white
+        UINavigationBar.appearance().tintColor = Theme.white
+        
+        NetworkActivityIndicatorManager.shared.isEnabled = true
         
         // 程序启动
         let mainVC = UIStoryboard.init(name: "Main", bundle: nil).instantiateInitialViewController()
@@ -40,7 +43,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 extension AppDelegate {
     
-    func setupLaunchImage() {
+    fileprivate func setupLaunchImage() {
         // 启动页
         if let data = UserDefaults.standard.value(forKey: "LaunchImage") as? Data,
             let image = UIImage(data: data) {
@@ -68,10 +71,10 @@ extension AppDelegate {
         downloadNewImage()
     }
     
-    func downloadNewImage() {
+    private func downloadNewImage() {
         let url = URL(string: "https://news-at.zhihu.com/api/4/start-image/1080*1776")!
         
-        request(url, withMethod: .get).responseJSON { (response) in
+        request(url, method: .get).responseJSON { (response) in
             switch response.result {
             case .success(let json as [String: AnyObject]):
                 guard let imgURLString = json["img"] as? String,
@@ -79,7 +82,7 @@ extension AppDelegate {
                         fatalError()
                 }
                 
-                request(imgURL, withMethod: .get).responseData { (response) in
+                request(imgURL, method: .get).responseData { (response) in
                     switch response.result {
                     case .success(let data):
                         UserDefaults.standard.set(data, forKey: "LaunchImage")

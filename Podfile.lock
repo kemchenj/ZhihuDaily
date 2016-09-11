@@ -1,31 +1,20 @@
 PODS:
   - Alamofire (4.0.0)
-  - Kingfisher (2.4.3)
+  - AlamofireImage (3.0.0):
+    - Alamofire (~> 4.0)
+  - AlamofireNetworkActivityIndicator (2.0.0):
+    - Alamofire (~> 4.0)
 
 DEPENDENCIES:
-  - Alamofire (from `https://github.com/Alamofire/Alamofire.git`, branch `swift3`)
-  - Kingfisher (from `https://github.com/onevcat/Kingfisher.git`, branch `swift3`)
-
-EXTERNAL SOURCES:
-  Alamofire:
-    :branch: swift3
-    :git: https://github.com/Alamofire/Alamofire.git
-  Kingfisher:
-    :branch: swift3
-    :git: https://github.com/onevcat/Kingfisher.git
-
-CHECKOUT OPTIONS:
-  Alamofire:
-    :commit: 1dc3992a3854ca369368c8997ea3c45054070e67
-    :git: https://github.com/Alamofire/Alamofire.git
-  Kingfisher:
-    :commit: 17defa5188443841504e28419042f1a872db9dcf
-    :git: https://github.com/onevcat/Kingfisher.git
+  - Alamofire (~> 4.0)
+  - AlamofireImage (~> 3.0)
+  - AlamofireNetworkActivityIndicator (~> 2.0)
 
 SPEC CHECKSUMS:
   Alamofire: fef59f00388f267e52d9b432aa5d93dc97190f14
-  Kingfisher: 322a9c1c5b03212c1e741d6bece72d387b01a77a
+  AlamofireImage: 6594aa1139a67dcd36cde6da79ea4e5b318e60fb
+  AlamofireNetworkActivityIndicator: ba9f481748d954318dd99636abff028cd3fcdc07
 
-PODFILE CHECKSUM: 7b5936e9f9746657da722b325e9553f4942397ec
+PODFILE CHECKSUM: cbb2fe6cfccea83c42b2bf8e5202af49c3452cbf
 
-COCOAPODS: 1.1.0.beta.1
+COCOAPODS: 1.1.0.rc.1

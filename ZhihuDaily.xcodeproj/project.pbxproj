@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		927650991AA604186B16FEF1 /* Pods_ZhihuDaily.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5CB65594237207BE9675F19B /* Pods_ZhihuDaily.framework */; };
+		05BE07960269890A8C0BAB25 /* Pods_ZhihuDaily.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1833E8973EFDE981A212B06 /* Pods_ZhihuDaily.framework */; };
 		C801AFE61D61BCB000191852 /* BannerContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C801AFE51D61BCB000191852 /* BannerContentView.swift */; };
 		C813826F1D60342A0015301F /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = C813826E1D60342A0015301F /* Theme.swift */; };
 		C81382751D6047D80015301F /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C81382741D6047D80015301F /* Extension.swift */; };
@@ -27,9 +27,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		258C332E2C1E0EE6F6F3B377 /* Pods-ZhihuDaily.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ZhihuDaily.release.xcconfig"; path = "Pods/Target Support Files/Pods-ZhihuDaily/Pods-ZhihuDaily.release.xcconfig"; sourceTree = "<group>"; };
-		5CB65594237207BE9675F19B /* Pods_ZhihuDaily.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ZhihuDaily.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		6C5D3110A5D95A41D1BDD2A9 /* Pods-ZhihuDaily.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ZhihuDaily.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ZhihuDaily/Pods-ZhihuDaily.debug.xcconfig"; sourceTree = "<group>"; };
+		195EBE4AF09D5A377C509DC7 /* Pods-ZhihuDaily.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ZhihuDaily.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ZhihuDaily/Pods-ZhihuDaily.debug.xcconfig"; sourceTree = "<group>"; };
+		94D6A11790B57DA10EF6EBA6 /* Pods-ZhihuDaily.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ZhihuDaily.release.xcconfig"; path = "Pods/Target Support Files/Pods-ZhihuDaily/Pods-ZhihuDaily.release.xcconfig"; sourceTree = "<group>"; };
 		C801AFE51D61BCB000191852 /* BannerContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = BannerContentView.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		C813826E1D60342A0015301F /* Theme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		C81382741D6047D80015301F /* Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
@@ -49,6 +48,7 @@
 		C872BF4D1D45F1170020CEC5 /* BannerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = BannerView.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		C872BF501D45FD460020CEC5 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		C8880EAD1D5F595600E254F1 /* Model.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
+		D1833E8973EFDE981A212B06 /* Pods_ZhihuDaily.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ZhihuDaily.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,18 +56,18 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				927650991AA604186B16FEF1 /* Pods_ZhihuDaily.framework in Frameworks */,
+				05BE07960269890A8C0BAB25 /* Pods_ZhihuDaily.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		3B5C04FCB1D71DE9F3F8A3F9 /* Pods */ = {
+		00F04C8980ACC815E447C694 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				6C5D3110A5D95A41D1BDD2A9 /* Pods-ZhihuDaily.debug.xcconfig */,
-				258C332E2C1E0EE6F6F3B377 /* Pods-ZhihuDaily.release.xcconfig */,
+				195EBE4AF09D5A377C509DC7 /* Pods-ZhihuDaily.debug.xcconfig */,
+				94D6A11790B57DA10EF6EBA6 /* Pods-ZhihuDaily.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -87,7 +87,7 @@
 				C83099A61D44A73100D406F6 /* ZhihuDaily */,
 				C83099A51D44A73100D406F6 /* Products */,
 				C872BF4F1D45FD450020CEC5 /* Frameworks */,
-				3B5C04FCB1D71DE9F3F8A3F9 /* Pods */,
+				00F04C8980ACC815E447C694 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -166,7 +166,7 @@
 			isa = PBXGroup;
 			children = (
 				C872BF501D45FD460020CEC5 /* WebKit.framework */,
-				5CB65594237207BE9675F19B /* Pods_ZhihuDaily.framework */,
+				D1833E8973EFDE981A212B06 /* Pods_ZhihuDaily.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -408,7 +408,7 @@
 		};
 		C83099B71D44A73100D406F6 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6C5D3110A5D95A41D1BDD2A9 /* Pods-ZhihuDaily.debug.xcconfig */;
+			baseConfigurationReference = 195EBE4AF09D5A377C509DC7 /* Pods-ZhihuDaily.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -424,7 +424,7 @@
 		};
 		C83099B81D44A73100D406F6 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 258C332E2C1E0EE6F6F3B377 /* Pods-ZhihuDaily.release.xcconfig */;
+			baseConfigurationReference = 94D6A11790B57DA10EF6EBA6 /* Pods-ZhihuDaily.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;

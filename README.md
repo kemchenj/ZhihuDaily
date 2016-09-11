@@ -1,9 +1,9 @@
 # 知乎日报
-> **平台:** iOS 10, Xcode 8.0(beta 6)
+> **平台:** iOS 10, Xcode 8.0
 >
-> **语言:** Swift 3.0(beta 6)
+> **语言:** Swift 3.0
 >
-> **第三方库:** Alamofire, Kingfisher
+> **第三方库:** Alamofire, Alamofire, AlamofireNetworkActivityIndicator
 
 ![Demo Preview](Demo Preview.gif)
 

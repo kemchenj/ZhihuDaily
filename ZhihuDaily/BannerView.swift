@@ -10,7 +10,7 @@ import UIKit
 
 
 
-// 给Model用的协议，符合这一个协议的Model都可以被BannerView展示
+// MARK: - 给Model用的协议，符合这一个协议的Model都可以被BannerView展示
 protocol BannerDataSource {
     
     var bannerTitle: String { get }
@@ -21,7 +21,7 @@ protocol BannerDataSource {
 
 
 
-// 代理
+// MARK: - 代理
 protocol BannerViewDelegate {
     func tapBanner(model: BannerDataSource)
 }
@@ -131,10 +131,9 @@ extension BannerView {
 
 // MARK: - Collection View
 
-// MARK: - Data Source
-
-extension BannerView: UICollectionViewDataSource {
+extension BannerView: UICollectionViewDataSource, UICollectionViewDelegate {
     
+    // MARK: Data Source
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if models.count != 0 {
             return models.count + 2
@@ -169,12 +168,8 @@ extension BannerView: UICollectionViewDataSource {
         return cell
     }
     
-}
-
-// MARK: - Delegate
-
-extension BannerView: UICollectionViewDelegate {
     
+    // MARK: Delegate
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         delegate?.tapBanner(model: models[currentPage])
     }

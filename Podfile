@@ -6,9 +6,10 @@ platform :ios, '9.0'
 target 'ZhihuDaily' do
   use_frameworks!
   
-  pod 'Alamofire', :git => 'https://github.com/Alamofire/Alamofire.git', :branch => 'swift3'
-  # pod 'AlamofireImage', :git => 'https://github.com/kemchenj/AlamofireImage.git', :branch => 'swift3'
-  pod 'Kingfisher', :git => 'https://github.com/onevcat/Kingfisher.git', :branch => 'swift3'
+  pod 'Alamofire', '~> 4.0'
+  pod 'AlamofireImage', '~> 3.0'
+  pod 'AlamofireNetworkActivityIndicator', '~> 2.0'
+  # pod 'Kingfisher', :git => 'https://github.com/onevcat/Kingfisher.git', :branch => 'swift3'
 
 end
 
